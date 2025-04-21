@@ -42,15 +42,15 @@ const featuredProjects: { label: string; href: string }[] = [
 ];
 
 const navImages = {
-  projects: "/photo-1488590528505-98d2b5aba04b.jpg",
-  countries: "/photo-1500673922987-e212871fec22.jpg",
-  stack: "/photo-1518770660439-4636190af475.jpg",
-  featured: "/photo-1488590528505-98d2b5aba04b.jpg",
-  tribes: "/photo-1581091226825-a6a2a5aee158.jpg",
-  resources: "/photo-1461749280684-dccba630e2f6.jpg",
-  community: "/photo-1500673922987-e212871fec22.jpg",
-  events: "/photo-1466442929976-97f336a657be.jpg",
-  profile: "/photo-1581091226825-a6a2a5aee158.jpg",
+  projects: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=facearea&w=400&q=80",
+  countries: "https://images.unsplash.com/photo-1500673922987-e212871fec22?auto=format&fit=facearea&w=400&q=80",
+  stack: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=facearea&w=400&q=80",
+  featured: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=facearea&w=400&q=80",
+  tribes: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=facearea&w=400&q=80",
+  resources: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=facearea&w=400&q=80",
+  community: "https://images.unsplash.com/photo-1500673922987-e212871fec22?auto=format&fit=facearea&w=400&q=80",
+  events: "https://images.unsplash.com/photo-1466442929976-97f336a657be?auto=format&fit=facearea&w=400&q=80",
+  profile: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=facearea&w=400&q=80",
 };
 
 export function Navbar() {
@@ -79,8 +79,9 @@ export function Navbar() {
         {/* Explore Projects Dropdown */}
         <NavDropdown
           trigger={
-            <span className="flex items-center">
-              <LayoutGrid className="mr-2" size={20} /> Explore Projects
+            <span className="flex items-center gap-1 font-medium">
+              <LayoutGrid className="mr-2" size={20} />
+              Explore Projects
             </span>
           }
           image={navImages.projects}
@@ -91,14 +92,12 @@ export function Navbar() {
               label: "By Country",
               icon: <Globe size={17} />,
               href: "#",
-              onClick: (e?: any) => {},
             },
             // By Tech Stack
             {
               label: "By Tech Stack",
               icon: <Layers size={17} />,
               href: "#",
-              onClick: (e?: any) => {},
             },
             // Featured Projects (dropdown only, highlight)
             ...featuredProjects.map((p) => ({
@@ -112,8 +111,9 @@ export function Navbar() {
         {/* Tribes Dropdown */}
         <NavDropdown
           trigger={
-            <span className="flex items-center">
-              <UsersRound className="mr-2" size={20} /> Tribes
+            <span className="flex items-center gap-1 font-medium">
+              <UsersRound className="mr-2" size={20} />
+              Tribes
             </span>
           }
           image={navImages.tribes}
@@ -135,8 +135,9 @@ export function Navbar() {
         {/* Resources Dropdown */}
         <NavDropdown
           trigger={
-            <span className="flex items-center">
-              <BookOpen className="mr-2" size={20} /> Resources
+            <span className="flex items-center gap-1 font-medium">
+              <BookOpen className="mr-2" size={20} />
+              Resources
             </span>
           }
           image={navImages.resources}
@@ -152,8 +153,9 @@ export function Navbar() {
         {/* Community Dropdown */}
         <NavDropdown
           trigger={
-            <span className="flex items-center">
-              <Users className="mr-2" size={20} /> Community
+            <span className="flex items-center gap-1 font-medium">
+              <Users className="mr-2" size={20} />
+              Community
             </span>
           }
           image={navImages.community}
@@ -168,8 +170,9 @@ export function Navbar() {
         {/* Events Dropdown */}
         <NavDropdown
           trigger={
-            <span className="flex items-center">
-              <Calendar className="mr-2" size={20} /> Events
+            <span className="flex items-center gap-1 font-medium">
+              <Calendar className="mr-2" size={20} />
+              Events
             </span>
           }
           image={navImages.events}
@@ -185,8 +188,9 @@ export function Navbar() {
         {/* My Profile Dropdown */}
         <NavDropdown
           trigger={
-            <span className="flex items-center">
-              <User className="mr-2" size={20} /> My Profile
+            <span className="flex items-center gap-1 font-medium">
+              <User className="mr-2" size={20} />
+              My Profile
             </span>
           }
           image={navImages.profile}
@@ -219,3 +223,5 @@ export function Navbar() {
   );
 }
 
+// This file is getting long (222+ lines). 
+// Consider refactoring it into smaller components (e.g., country dropdown, stack dropdown) for maintainability.
