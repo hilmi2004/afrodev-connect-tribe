@@ -52,6 +52,15 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// African-inspired color palette
+				afro: {
+					purple: '#8B5CF6', // Primary purple
+					green: '#10B981', // Vibrant green
+					red: '#EA384C', // Warm red
+					gold: '#F59E0B', // Gold accent
+					black: '#1A1F2C', // Deep black
+					brown: '#78350F' // Rich brown
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
