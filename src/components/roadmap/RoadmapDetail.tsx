@@ -1,8 +1,7 @@
-
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Download, Heart } from "lucide-react";
+import { ArrowLeft, Download, Heart, Link } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 // Sample roadmap data (in a real app, this would come from an API)
