@@ -1,12 +1,24 @@
-
 import { MainLayout } from "@/components/layout/MainLayout";
 import { RoadmapCreator } from "@/components/roadmap/RoadmapCreator";
 import { RoadmapList } from "@/components/roadmap/RoadmapList";
+import { RoadmapDetail } from "@/components/roadmap/RoadmapDetail";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useParams } from "react-router-dom";
 
 const Roadmap = () => {
+  const { id } = useParams();
   const [activeTab, setActiveTab] = useState<string>("browse");
+  
+  if (id) {
+    return (
+      <MainLayout>
+        <div className="container py-8 lg:py-12">
+          <RoadmapDetail />
+        </div>
+      </MainLayout>
+    );
+  }
   
   return (
     <MainLayout>

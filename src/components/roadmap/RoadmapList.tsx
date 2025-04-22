@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Download, Heart, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
 
 // Sample roadmap data
 const SAMPLE_ROADMAPS = [
@@ -66,6 +67,7 @@ const SAMPLE_ROADMAPS = [
 export const RoadmapList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [roadmaps, setRoadmaps] = useState(SAMPLE_ROADMAPS);
+  const navigate = useNavigate();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -76,13 +78,15 @@ export const RoadmapList = () => {
     roadmap.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleLike = (id: string) => {
+  const handleLike = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent navigation when clicking the like button
     setRoadmaps(roadmaps.map(roadmap => 
       roadmap.id === id ? { ...roadmap, likes: roadmap.likes + 1 } : roadmap
     ));
   };
 
-  const handleDownload = (id: string) => {
+  const handleDownload = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent navigation when clicking the download button
     setRoadmaps(roadmaps.map(roadmap => 
       roadmap.id === id ? { ...roadmap, downloads: roadmap.downloads + 1 } : roadmap
     ));
@@ -99,6 +103,10 @@ export const RoadmapList = () => {
       downloadAnchorNode.click();
       downloadAnchorNode.remove();
     }
+  };
+
+  const handleRoadmapClick = (id: string) => {
+    navigate(`/roadmap/${id}`);
   };
 
   return (
@@ -118,7 +126,11 @@ export const RoadmapList = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredRoadmaps.map(roadmap => (
-          <Card key={roadmap.id} className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+          <Card 
+            key={roadmap.id} 
+            className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 cursor-pointer"
+            onClick={() => handleRoadmapClick(roadmap.id)}
+          >
             <div className="h-48 overflow-hidden">
               <img 
                 src={roadmap.image} 
@@ -140,7 +152,7 @@ export const RoadmapList = () => {
                 variant="ghost"
                 size="sm"
                 className="flex items-center gap-1"
-                onClick={() => handleLike(roadmap.id)}
+                onClick={(e) => handleLike(roadmap.id, e)}
               >
                 <Heart size={16} className="text-afro-red" />
                 <span>{roadmap.likes}</span>
@@ -149,7 +161,7 @@ export const RoadmapList = () => {
                 variant="outline"
                 size="sm"
                 className="flex items-center gap-1"
-                onClick={() => handleDownload(roadmap.id)}
+                onClick={(e) => handleDownload(roadmap.id, e)}
               >
                 <Download size={16} />
                 <span>{roadmap.downloads}</span>
