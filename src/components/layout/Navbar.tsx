@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { NavDropdown } from "./NavDropdown";
@@ -76,6 +75,17 @@ export function Navbar() {
         >
           Home
         </Link>
+        
+        {/* Roadmap Link */}
+        <Link
+          to="/roadmap"
+          className={`px-3 py-1.5 font-semibold text-base rounded transition-colors
+          ${location.pathname.includes("/roadmap") ? "bg-afro-purple text-white shadow" : "text-gray-900 hover:text-afro-purple hover:bg-afro-purple/10"}
+          `}
+        >
+          Roadmaps
+        </Link>
+        
         {/* Explore Projects Dropdown */}
         <NavDropdown
           trigger={
@@ -108,6 +118,7 @@ export function Navbar() {
           ]}
           visualLabel="Explore Projects"
         />
+        
         {/* Tribes Dropdown */}
         <NavDropdown
           trigger={
@@ -132,6 +143,7 @@ export function Navbar() {
           ]}
           visualLabel="Tribes"
         />
+        
         {/* Resources Dropdown */}
         <NavDropdown
           trigger={
@@ -149,7 +161,7 @@ export function Navbar() {
           ]}
           visualLabel="Resources"
         />
-
+        
         {/* Community Dropdown */}
         <NavDropdown
           trigger={
@@ -166,7 +178,7 @@ export function Navbar() {
           ]}
           visualLabel="Community"
         />
-
+        
         {/* Events Dropdown */}
         <NavDropdown
           trigger={
@@ -184,7 +196,7 @@ export function Navbar() {
           ]}
           visualLabel="Events"
         />
-
+        
         {/* My Profile Dropdown */}
         <NavDropdown
           trigger={
@@ -222,6 +234,3 @@ export function Navbar() {
     </header>
   );
 }
-
-// This file is getting long (222+ lines). 
-// Consider refactoring it into smaller components (e.g., country dropdown, stack dropdown) for maintainability.
