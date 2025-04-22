@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -227,35 +228,37 @@ export const RoadmapDetail = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-5xl mx-auto">
       <Button 
         onClick={() => navigate("/roadmap")} 
         variant="ghost" 
-        className="mb-4 -ml-2 text-gray-600"
+        className="mb-4 -ml-2 text-gray-600 hover:text-afro-purple transition-colors"
       >
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Roadmaps
       </Button>
       
-      <div className="relative rounded-xl overflow-hidden h-64 mb-6">
+      <div className="relative rounded-2xl overflow-hidden h-80 mb-6 shadow-2xl group">
         <img 
           src={roadmap.image} 
           alt={roadmap.title} 
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-10000 group-hover:scale-110"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
-          <h1 className="text-3xl font-bold text-white">{roadmap.title}</h1>
-          <p className="text-white/90 mt-1">Created by {roadmap.author}</p>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-8">
+          <h1 className="text-4xl font-bold text-white bg-gradient-to-r from-white to-afro-purple bg-clip-text text-transparent">
+            {roadmap.title}
+          </h1>
+          <p className="text-white/90 mt-2">Created by {roadmap.author}</p>
         </div>
       </div>
       
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex justify-between items-center mb-12 p-6 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg">
         <p className="text-lg text-gray-700">{roadmap.description}</p>
         <div className="flex gap-4">
           <Button
             onClick={handleLike}
             variant={liked ? "default" : "outline"}
             size="sm"
-            className={`flex items-center gap-1 ${liked ? 'bg-afro-red text-white hover:bg-afro-red/90' : ''}`}
+            className={`flex items-center gap-1 transition-all ${liked ? 'bg-afro-red text-white hover:bg-afro-red/90' : 'hover:border-afro-red hover:text-afro-red'}`}
           >
             <Heart size={16} className={liked ? "text-white" : "text-afro-red"} />
             <span>{liked ? roadmap.likes + 1 : roadmap.likes}</span>
@@ -264,7 +267,7 @@ export const RoadmapDetail = () => {
             onClick={handleDownload}
             variant="outline"
             size="sm"
-            className="flex items-center gap-1"
+            className="flex items-center gap-1 hover:bg-afro-purple/10 hover:border-afro-purple transition-colors"
           >
             <Download size={16} />
             <span>Download</span>
@@ -272,7 +275,7 @@ export const RoadmapDetail = () => {
         </div>
       </div>
       
-      <div className="space-y-8 mt-12">
+      <div className="relative space-y-12 mt-16 before:absolute before:top-0 before:bottom-0 before:left-[28px] before:w-1 before:bg-gradient-to-b before:from-afro-purple before:to-afro-green before:-z-10 before:rounded-full">
         {roadmap.steps.map((step: any, index: number) => (
           <RoadmapStep key={step.id} step={step} index={index + 1} />
         ))}
@@ -289,26 +292,28 @@ interface RoadmapStepProps {
 
 const RoadmapStep = ({ step, index, isChild = false }: RoadmapStepProps) => {
   return (
-    <div className={`relative ${isChild ? "ml-12 mt-6" : ""}`}>
+    <div className={`relative ${isChild ? "ml-16 mt-8" : ""}`}>
       {!isChild && (
-        <div className="absolute top-0 bottom-0 left-4 w-0.5 bg-afro-purple/20 -z-10" />
+        <div className="absolute h-12 w-12 -left-6 -top-6 rounded-full bg-gradient-to-br from-afro-purple to-afro-gold opacity-20 animate-pulse" />
       )}
       
-      <Card className="border-afro-purple/20 hover:border-afro-purple/50 transition-colors">
+      <Card className="border-afro-purple/20 hover:border-afro-purple/50 transition-all duration-300 hover:shadow-lg hover:shadow-afro-purple/10 backdrop-blur-sm">
         <CardContent className="p-6">
           <div className="flex items-center gap-4">
-            <div className="flex-shrink-0 h-8 w-8 rounded-full bg-afro-purple text-white flex items-center justify-center font-medium">
+            <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gradient-to-br from-afro-purple to-afro-gold text-white flex items-center justify-center font-medium shadow-lg">
               {index}
             </div>
-            <h3 className="text-xl font-bold">{step.title}</h3>
+            <h3 className="text-xl font-bold bg-gradient-to-r from-afro-purple to-afro-gold bg-clip-text text-transparent">
+              {step.title}
+            </h3>
           </div>
           
-          <p className="mt-3 text-gray-600">{step.description}</p>
+          <p className="mt-3 text-gray-600 pl-14">{step.description}</p>
           
           {step.links && step.links.length > 0 && (
-            <div className="mt-4 space-y-2">
+            <div className="mt-4 space-y-2 pl-14">
               <h4 className="text-sm font-medium text-gray-500">Resources:</h4>
-              <ul className="space-y-1">
+              <ul className="space-y-1 bg-afro-purple/5 p-3 rounded-lg">
                 {step.links.map((link: any, i: number) => (
                   <li key={i} className="flex items-center gap-2 text-sm">
                     <Link size={14} className="text-afro-purple" />
@@ -316,7 +321,7 @@ const RoadmapStep = ({ step, index, isChild = false }: RoadmapStepProps) => {
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-afro-purple hover:underline"
+                      className="text-afro-purple hover:underline transition-all hover:text-afro-gold"
                     >
                       {link.title}
                     </a>
@@ -329,7 +334,7 @@ const RoadmapStep = ({ step, index, isChild = false }: RoadmapStepProps) => {
       </Card>
       
       {step.children && step.children.length > 0 && (
-        <div className="pl-4 border-l-2 border-dashed border-afro-purple/20 ml-4 space-y-6">
+        <div className="pl-6 border-l-2 border-dashed border-afro-purple/20 ml-5 space-y-8 mt-4">
           {step.children.map((childStep: any, childIndex: number) => (
             <RoadmapStep
               key={childStep.id}

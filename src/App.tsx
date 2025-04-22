@@ -12,6 +12,8 @@ import Tribes from "./pages/Tribes";
 import Discover from "./pages/Discover";
 import About from "./pages/About";
 import Roadmap from "./pages/Roadmap";
+import Meetups from "./pages/Meetups";
+import DevTools from "./pages/DevTools";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +34,8 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/roadmap" element={<Roadmap />} />
           <Route path="/roadmap/:id" element={<Roadmap />} />
+          <Route path="/meetups" element={<Meetups />} />
+          <Route path="/dev-tools" element={<DevTools />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

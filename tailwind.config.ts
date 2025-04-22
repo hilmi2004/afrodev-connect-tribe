@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -59,7 +60,8 @@ export default {
 					red: '#EA384C', // Warm red
 					gold: '#F59E0B', // Gold accent
 					black: '#1A1F2C', // Deep black
-					brown: '#78350F' // Rich brown
+					brown: '#78350F', // Rich brown
+					blue: '#3B82F6' // Blue accent (new)
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
@@ -93,11 +95,29 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'pulse': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.5' }
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' }
+				},
+				'glow': {
+					'0%, 100%': { boxShadow: '0 0 5px rgba(139, 92, 246, 0.5)' },
+					'50%': { boxShadow: '0 0 20px rgba(139, 92, 246, 0.8)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+				'float': 'float 6s ease-in-out infinite',
+				'glow': 'glow 2s ease-in-out infinite'
+			},
+			backdropBlur: {
+				xs: '2px',
 			}
 		}
 	},
