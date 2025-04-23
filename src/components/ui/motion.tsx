@@ -89,9 +89,56 @@ export const rotateIn = (delay: number = 0) => ({
   }
 });
 
+export const pulseAnimation = {
+  scale: [1, 1.05, 1],
+  transition: { duration: 2, repeat: Infinity }
+};
+
+export const shimmerAnimation = {
+  x: ["0%", "100%"],
+  transition: { 
+    duration: 1.5, 
+    repeat: Infinity, 
+    repeatType: "mirror" as const
+  }
+};
+
+export const floatAnimation = {
+  y: [0, -10, 0],
+  transition: {
+    duration: 3,
+    repeat: Infinity,
+    ease: "easeInOut"
+  }
+};
+
+export const loadMoreAnimation = {
+  initial: { opacity: 0, y: 20 },
+  animate: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 0.5,
+      staggerChildren: 0.1
+    }
+  },
+  exit: { 
+    opacity: 0,
+    y: -20,
+    transition: {
+      duration: 0.3
+    }
+  }
+};
+
 export const MotionDiv = motion.div;
 export const MotionButton = motion.button;
 export const MotionImage = motion.img;
 export const MotionHeading = motion.h1;
 export const MotionCard = motion.div;
 export const MotionSpan = motion.span;
+export const MotionP = motion.p;
+export const MotionUl = motion.ul;
+export const MotionLi = motion.li;
+export const MotionA = motion.a;
+export const MotionSection = motion.section;
