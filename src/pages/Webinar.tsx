@@ -1,4 +1,3 @@
-
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +15,8 @@ import {
   PlayCircle,
   BookOpen,
   FileText,
-  Link
+  Link,
+  MapPin
 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -211,6 +211,10 @@ const RECORDED_WEBINARS = [
   }
 ];
 
+// Define proper types for both webinar types
+type UpcomingWebinar = typeof WEBINARS[0];
+type RecordedWebinar = typeof RECORDED_WEBINARS[0];
+
 // Categories for filtering
 const WEBINAR_CATEGORIES = [
   "All Categories",
@@ -233,25 +237,47 @@ const Webinar = () => {
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   
   const filterWebinars = () => {
-    let filtered = activeTab === "upcoming" ? [...WEBINARS] : [...RECORDED_WEBINARS];
-    
-    // Apply search term filter
-    if (searchTerm) {
-      filtered = filtered.filter(webinar => 
-        webinar.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        webinar.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        webinar.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
+    if (activeTab === "upcoming") {
+      let filtered = [...WEBINARS];
+      
+      // Apply search term filter
+      if (searchTerm) {
+        filtered = filtered.filter(webinar => 
+          webinar.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          webinar.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          webinar.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+      }
+      
+      // Apply category filter
+      if (selectedCategory !== "All Categories") {
+        filtered = filtered.filter(webinar => 
+          webinar.category.toLowerCase() === selectedCategory.toLowerCase()
+        );
+      }
+      
+      return filtered;
+    } else {
+      let filtered = [...RECORDED_WEBINARS];
+      
+      // Apply search term filter
+      if (searchTerm) {
+        filtered = filtered.filter(webinar => 
+          webinar.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          webinar.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          webinar.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+      }
+      
+      // Apply category filter
+      if (selectedCategory !== "All Categories") {
+        filtered = filtered.filter(webinar => 
+          webinar.category.toLowerCase() === selectedCategory.toLowerCase()
+        );
+      }
+      
+      return filtered;
     }
-    
-    // Apply category filter
-    if (selectedCategory !== "All Categories") {
-      filtered = filtered.filter(webinar => 
-        webinar.category.toLowerCase() === selectedCategory.toLowerCase()
-      );
-    }
-    
-    return filtered;
   };
   
   const filteredWebinars = filterWebinars();
@@ -407,9 +433,10 @@ const Webinar = () => {
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
               >
                 {filteredWebinars.length > 0 ? (
-                  filteredWebinars.map((webinar, index) => (
-                    <UpcomingWebinarCard key={webinar.id} webinar={webinar} index={index} />
-                  ))
+                  activeTab === "upcoming" &&
+                    (filteredWebinars as UpcomingWebinar[]).map((webinar, index) => (
+                      <UpcomingWebinarCard key={webinar.id} webinar={webinar} index={index} />
+                    ))
                 ) : (
                   <div className="col-span-full py-16 text-center">
                     <p className="text-xl text-gray-500">No webinars found matching your criteria.</p>
@@ -427,9 +454,10 @@ const Webinar = () => {
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
               >
                 {filteredWebinars.length > 0 ? (
-                  filteredWebinars.map((webinar, index) => (
-                    <RecordedWebinarCard key={webinar.id} webinar={webinar} index={index} />
-                  ))
+                  activeTab === "recorded" &&
+                    (filteredWebinars as RecordedWebinar[]).map((webinar, index) => (
+                      <RecordedWebinarCard key={webinar.id} webinar={webinar} index={index} />
+                    ))
                 ) : (
                   <div className="col-span-full py-16 text-center">
                     <p className="text-xl text-gray-500">No recorded webinars found matching your criteria.</p>
@@ -515,7 +543,7 @@ const Webinar = () => {
 };
 
 interface UpcomingWebinarCardProps {
-  webinar: typeof WEBINARS[0];
+  webinar: UpcomingWebinar;
   index: number;
 }
 
@@ -606,7 +634,7 @@ const UpcomingWebinarCard = ({ webinar, index }: UpcomingWebinarCardProps) => {
 };
 
 interface RecordedWebinarCardProps {
-  webinar: typeof RECORDED_WEBINARS[0];
+  webinar: RecordedWebinar;
   index: number;
 }
 

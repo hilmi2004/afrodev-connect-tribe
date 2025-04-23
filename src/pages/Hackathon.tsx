@@ -1,4 +1,3 @@
-
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -130,7 +129,7 @@ const HACKATHONS = [
   }
 ];
 
-// Past hackathons
+// Past hackathons with updated type to match structure
 const PAST_HACKATHONS = [
   {
     id: "p1",
@@ -140,6 +139,11 @@ const PAST_HACKATHONS = [
     endDate: "October 17, 2023",
     location: "Multiple Locations + Virtual",
     image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1170&auto=format&fit=crop",
+    prizePool: "$10,000",
+    participants: 420,
+    categories: ["Education", "Youth", "Coding"],
+    sponsors: ["SAP", "UNESCO", "African Union"],
+    registrationDeadline: "October 1, 2023",
     winners: [
       {
         name: "EduAccess",
@@ -168,6 +172,11 @@ const PAST_HACKATHONS = [
     endDate: "August 7, 2023",
     location: "Addis Ababa, Ethiopia + Virtual",
     image: "https://images.unsplash.com/photo-1565711561500-49678a10a63f?q=80&w=1170&auto=format&fit=crop",
+    prizePool: "$13,000",
+    participants: 280,
+    categories: ["Energy", "Sustainability", "CleanTech"],
+    sponsors: ["GIZ", "AfDB", "Shell Foundation"],
+    registrationDeadline: "July 25, 2023",
     winners: [
       {
         name: "SolarHub",
@@ -219,6 +228,9 @@ const LOCATIONS = [
   "Virtual"
 ];
 
+type UpcomingHackathon = typeof HACKATHONS[0];
+type PastHackathon = typeof PAST_HACKATHONS[0];
+
 const Hackathon = () => {
   const [activeTab, setActiveTab] = useState("upcoming");
   const [searchTerm, setSearchTerm] = useState("");
@@ -226,33 +238,54 @@ const Hackathon = () => {
   const [selectedLocation, setSelectedLocation] = useState("All Locations");
   
   const filterHackathons = () => {
-    let filtered = activeTab === "upcoming" ? [...HACKATHONS] : [...PAST_HACKATHONS];
-    
-    // Apply search term filter
-    if (searchTerm) {
-      filtered = filtered.filter(hackathon => 
-        hackathon.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        hackathon.description.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+    if (activeTab === "upcoming") {
+      let filtered = [...HACKATHONS];
+      
+      // Apply search term filter
+      if (searchTerm) {
+        filtered = filtered.filter(hackathon => 
+          hackathon.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          hackathon.description.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+      
+      // Apply category filter
+      if (selectedCategory !== "All Categories") {
+        filtered = filtered.filter(hackathon => 
+          hackathon.categories.some(category => 
+            category.toLowerCase() === selectedCategory.toLowerCase()
+          )
+        );
+      }
+      
+      // Apply location filter
+      if (selectedLocation !== "All Locations") {
+        filtered = filtered.filter(hackathon => 
+          hackathon.location.toLowerCase().includes(selectedLocation.toLowerCase())
+        );
+      }
+      
+      return filtered;
+    } else {
+      let filtered = [...PAST_HACKATHONS];
+      
+      // Apply search term filter
+      if (searchTerm) {
+        filtered = filtered.filter(hackathon => 
+          hackathon.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          hackathon.description.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+      
+      // Apply location filter
+      if (selectedLocation !== "All Locations") {
+        filtered = filtered.filter(hackathon => 
+          hackathon.location.toLowerCase().includes(selectedLocation.toLowerCase())
+        );
+      }
+      
+      return filtered;
     }
-    
-    // Apply category filter
-    if (selectedCategory !== "All Categories" && activeTab === "upcoming") {
-      filtered = filtered.filter(hackathon => 
-        hackathon.categories.some(category => 
-          category.toLowerCase() === selectedCategory.toLowerCase()
-        )
-      );
-    }
-    
-    // Apply location filter
-    if (selectedLocation !== "All Locations") {
-      filtered = filtered.filter(hackathon => 
-        hackathon.location.toLowerCase().includes(selectedLocation.toLowerCase())
-      );
-    }
-    
-    return filtered;
   };
   
   const filteredHackathons = filterHackathons();
@@ -410,9 +443,10 @@ const Hackathon = () => {
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
               >
                 {filteredHackathons.length > 0 ? (
-                  filteredHackathons.map((hackathon, index) => (
-                    <HackathonCard key={hackathon.id} hackathon={hackathon} index={index} />
-                  ))
+                  activeTab === "upcoming" && 
+                    (filteredHackathons as UpcomingHackathon[]).map((hackathon, index) => (
+                      <HackathonCard key={hackathon.id} hackathon={hackathon} index={index} />
+                    ))
                 ) : (
                   <div className="col-span-full py-16 text-center">
                     <p className="text-xl text-gray-500">No hackathons found matching your criteria.</p>
@@ -430,9 +464,10 @@ const Hackathon = () => {
                 className="grid grid-cols-1 lg:grid-cols-2 gap-8"
               >
                 {filteredHackathons.length > 0 ? (
-                  filteredHackathons.map((hackathon, index) => (
-                    <PastHackathonCard key={hackathon.id} hackathon={hackathon} index={index} />
-                  ))
+                  activeTab === "past" && 
+                    (filteredHackathons as PastHackathon[]).map((hackathon, index) => (
+                      <PastHackathonCard key={hackathon.id} hackathon={hackathon} index={index} />
+                    ))
                 ) : (
                   <div className="col-span-full py-16 text-center">
                     <p className="text-xl text-gray-500">No past hackathons found matching your criteria.</p>
@@ -449,7 +484,7 @@ const Hackathon = () => {
 };
 
 interface HackathonCardProps {
-  hackathon: typeof HACKATHONS[0];
+  hackathon: UpcomingHackathon;
   index: number;
 }
 
@@ -526,7 +561,7 @@ const HackathonCard = ({ hackathon, index }: HackathonCardProps) => {
 };
 
 interface PastHackathonCardProps {
-  hackathon: typeof PAST_HACKATHONS[0];
+  hackathon: PastHackathon;
   index: number;
 }
 

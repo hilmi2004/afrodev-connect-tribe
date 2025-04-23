@@ -142,3 +142,31 @@ export const MotionUl = motion.ul;
 export const MotionLi = motion.li;
 export const MotionA = motion.a;
 export const MotionSection = motion.section;
+
+// Custom component to support Shadcn Button props with motion
+import { ButtonHTMLAttributes, forwardRef } from "react";
+import { Button } from "@/components/ui/button";
+
+type MotionButtonWithVariantProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  size?: "default" | "sm" | "lg" | "icon";
+  asChild?: boolean;
+};
+
+export const MotionButtonWithVariant = forwardRef<HTMLButtonElement, MotionButtonWithVariantProps>(
+  ({ children, variant, size, className, ...props }, ref) => {
+    return (
+      <Button
+        ref={ref}
+        variant={variant}
+        size={size}
+        className={className}
+        {...props}
+      >
+        {children}
+      </Button>
+    );
+  }
+);
+MotionButtonWithVariant.displayName = "MotionButtonWithVariant";
+

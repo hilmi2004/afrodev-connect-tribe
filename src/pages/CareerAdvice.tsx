@@ -17,7 +17,8 @@ import {
   FileText,
   Clock,
   Calendar,
-  Filter
+  Filter,
+  MapPin
 } from "lucide-react";
 import { useState } from "react";
 import { 

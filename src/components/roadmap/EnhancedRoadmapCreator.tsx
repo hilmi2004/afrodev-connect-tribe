@@ -9,7 +9,7 @@ import { Download, Link, Plus, Share, EyeIcon, Code } from "lucide-react";
 import { toast } from "sonner";
 import { 
   MotionDiv, 
-  MotionButton, 
+  MotionButtonWithVariant,
   fadeIn, 
   slideInUp,
   staggerContainer 
@@ -464,7 +464,7 @@ export const EnhancedRoadmapCreator = () => {
               </Button>
               
               <div className="flex gap-3">
-                <MotionButton
+                <MotionButtonWithVariant
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => toast.success("Roadmap shared successfully!")}
@@ -473,17 +473,18 @@ export const EnhancedRoadmapCreator = () => {
                 >
                   <Share size={18} />
                   Share
-                </MotionButton>
+                </MotionButtonWithVariant>
                 
-                <MotionButton
+                <MotionButtonWithVariant
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleSaveRoadmap} 
+                  variant="default"
                   className="bg-gradient-to-r from-afro-purple to-afro-gold text-white hover:opacity-90 flex items-center gap-2"
                 >
                   <Download size={18} />
                   Save & Download
-                </MotionButton>
+                </MotionButtonWithVariant>
               </div>
             </div>
           </TabsContent>
