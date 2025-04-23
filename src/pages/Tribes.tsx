@@ -1,9 +1,9 @@
-
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Tribes as TribesComponent } from "@/components/home/Tribes";
 import { Button } from "@/components/ui/button";
 import { Search, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { TribeCreate } from "@/components/tribes/TribeCreate";
 
 const Tribes = () => {
   return (
@@ -17,10 +17,7 @@ const Tribes = () => {
                 Join specialized tech communities based on location, language, or interest to collaborate and grow together.
               </p>
             </div>
-            <Button className="bg-afro-purple hover:bg-afro-purple/90 flex items-center">
-              <Plus className="h-5 w-5 mr-2" />
-              Create a Tribe
-            </Button>
+            <TribeCreate />
           </div>
           
           <div className="bg-white rounded-lg shadow-sm p-6 mb-12">

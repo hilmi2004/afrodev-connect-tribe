@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,6 +22,9 @@ import Webinar from "./pages/Webinar";
 import TechNews from "./pages/TechNews";
 import CareerAdvice from "./pages/CareerAdvice";
 import NotFound from "./pages/NotFound";
+import FAQ from "./pages/FAQ";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 
 const queryClient = new QueryClient();
 
@@ -52,7 +54,9 @@ const App = () => (
           <Route path="/webinars" element={<Webinar />} />
           <Route path="/tech-news" element={<TechNews />} />
           <Route path="/career-advice" element={<CareerAdvice />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
