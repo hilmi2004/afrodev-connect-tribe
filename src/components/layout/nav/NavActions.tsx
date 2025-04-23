@@ -4,8 +4,13 @@ import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const NavActions = () => (
-  <div className="flex items-center gap-1">
-    <Button variant="ghost" size="icon" className="hover:bg-afro-purple/10">
+  <div className="flex items-center gap-2 md:gap-3">
+    <Button
+      variant="ghost"
+      size="icon"
+      className="hidden sm:inline-flex hover:bg-afro-purple/10"
+      aria-label="Search"
+    >
       <Search className="h-5 w-5" />
     </Button>
     <Link to="/login">

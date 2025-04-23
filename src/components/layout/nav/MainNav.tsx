@@ -1,4 +1,3 @@
-
 import { useLocation } from "react-router-dom";
 import { NavLink } from "./NavLink";
 import { NavDropdown } from "../NavDropdown";
@@ -33,7 +32,7 @@ export const MainNav = () => {
   const location = useLocation();
 
   return (
-    <nav className="hidden md:flex items-center gap-2 lg:gap-3 xl:gap-4">
+    <nav className="hidden md:flex items-center gap-5 lg:gap-7 xl:gap-9 px-2 py-1">
       <NavLink to="/" active={location.pathname === "/"}>
         Home
       </NavLink>
