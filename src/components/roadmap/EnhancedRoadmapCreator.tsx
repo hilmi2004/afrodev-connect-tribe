@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RoadmapNode } from "./RoadmapNode";
-import { Download, Link, Plus, Share, EyeIcon, Code } from "lucide-react";
+import { Download, Link, Plus, Share, EyeIcon } from "lucide-react";
 import { toast } from "sonner";
 import { 
   MotionDiv, 
@@ -44,7 +43,6 @@ export const EnhancedRoadmapCreator = () => {
 
   const handleAddStep = (parentId: string | null = null) => {
     if (!parentId) {
-      // Add top-level step
       setSteps([
         ...steps,
         {
@@ -58,7 +56,6 @@ export const EnhancedRoadmapCreator = () => {
       return;
     }
 
-    // Add nested step
     const addChildToStep = (step: RoadmapStep): RoadmapStep => {
       if (step.id === parentId) {
         return {
@@ -126,10 +123,8 @@ export const EnhancedRoadmapCreator = () => {
       return;
     }
 
-    // In a real app, this would save to a database
     toast.success("Roadmap saved successfully!");
     
-    // Create a data URL for downloading
     const roadmapData = {
       title: roadmapTitle,
       description: roadmapDescription,
@@ -465,6 +460,7 @@ export const EnhancedRoadmapCreator = () => {
               
               <div className="flex gap-3">
                 <MotionButtonWithVariant
+                  initial={{ scale: 1 }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => toast.success("Roadmap shared successfully!")}
@@ -476,6 +472,7 @@ export const EnhancedRoadmapCreator = () => {
                 </MotionButtonWithVariant>
                 
                 <MotionButtonWithVariant
+                  initial={{ scale: 1 }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleSaveRoadmap} 

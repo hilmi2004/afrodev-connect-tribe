@@ -1,5 +1,7 @@
 
 import { motion } from "framer-motion";
+import { ButtonHTMLAttributes, forwardRef } from "react";
+import { Button } from "@/components/ui/button";
 
 export const fadeIn = (delay: number = 0.1) => ({
   hidden: { opacity: 0, y: 20 },
@@ -144,17 +146,20 @@ export const MotionA = motion.a;
 export const MotionSection = motion.section;
 
 // Custom component to support Shadcn Button props with motion
-import { ButtonHTMLAttributes, forwardRef } from "react";
-import { Button } from "@/components/ui/button";
-
 type MotionButtonWithVariantProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
   size?: "default" | "sm" | "lg" | "icon";
   asChild?: boolean;
+  whileHover?: any;
+  whileTap?: any;
+  initial?: any;
+  animate?: any;
+  exit?: any;
+  transition?: any;
 };
 
-export const MotionButtonWithVariant = forwardRef<HTMLButtonElement, MotionButtonWithVariantProps>(
-  ({ children, variant, size, className, ...props }, ref) => {
+export const MotionButtonWithVariant = motion(forwardRef<HTMLButtonElement, MotionButtonWithVariantProps>(
+  ({ children, variant, size, className, whileHover, whileTap, initial, animate, exit, transition, ...props }, ref) => {
     return (
       <Button
         ref={ref}
@@ -167,6 +172,5 @@ export const MotionButtonWithVariant = forwardRef<HTMLButtonElement, MotionButto
       </Button>
     );
   }
-);
+));
 MotionButtonWithVariant.displayName = "MotionButtonWithVariant";
-
