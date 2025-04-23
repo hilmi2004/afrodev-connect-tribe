@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -25,43 +26,46 @@ import NotFound from "./pages/NotFound";
 import FAQ from "./pages/FAQ";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import React from "react";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/project-spotlight" element={<ProjectSpotlight />} />
-          <Route path="/tribes" element={<Tribes />} />
-          <Route path="/discover" element={<Discover />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/roadmap" element={<Roadmap />} />
-          <Route path="/roadmap/:id" element={<Roadmap />} />
-          <Route path="/meetups" element={<Meetups />} />
-          <Route path="/dev-tools" element={<DevTools />} />
-          <Route path="/dev-profile" element={<DevProfile />} />
-          <Route path="/local-connect" element={<LocalConnect />} />
-          <Route path="/forum" element={<Forum />} />
-          <Route path="/hackathons" element={<Hackathon />} />
-          <Route path="/webinars" element={<Webinar />} />
-          <Route path="/tech-news" element={<TechNews />} />
-          <Route path="/career-advice" element={<CareerAdvice />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/terms-of-service" element={<TermsOfService />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/project-spotlight" element={<ProjectSpotlight />} />
+            <Route path="/tribes" element={<Tribes />} />
+            <Route path="/discover" element={<Discover />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/roadmap" element={<Roadmap />} />
+            <Route path="/roadmap/:id" element={<Roadmap />} />
+            <Route path="/meetups" element={<Meetups />} />
+            <Route path="/dev-tools" element={<DevTools />} />
+            <Route path="/dev-profile" element={<DevProfile />} />
+            <Route path="/local-connect" element={<LocalConnect />} />
+            <Route path="/forum" element={<Forum />} />
+            <Route path="/hackathons" element={<Hackathon />} />
+            <Route path="/webinars" element={<Webinar />} />
+            <Route path="/tech-news" element={<TechNews />} />
+            <Route path="/career-advice" element={<CareerAdvice />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </TooltipProvider>
       </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+    </QueryClientProvider>
+  </React.StrictMode>
 );
 
 export default App;
