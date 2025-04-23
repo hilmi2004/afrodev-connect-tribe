@@ -3,7 +3,7 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { EnhancedRoadmapCreator } from "@/components/roadmap/EnhancedRoadmapCreator";
 import { RoadmapList } from "@/components/roadmap/RoadmapList";
 import { RoadmapDetail } from "@/components/roadmap/RoadmapDetail";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useParams } from "react-router-dom";
 import { MotionDiv, fadeIn, slideInUp } from "@/components/ui/motion";
@@ -44,7 +44,7 @@ const Roadmap = () => {
           </p>
         </MotionDiv>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <Tabs defaultValue="browse" value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-12 bg-white/50 backdrop-blur-sm border border-afro-purple/20 shadow-lg overflow-hidden rounded-xl">
             <TabsTrigger value="browse" className="text-base py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-afro-purple data-[state=active]:to-afro-gold data-[state=active]:text-white">
               Browse Roadmaps

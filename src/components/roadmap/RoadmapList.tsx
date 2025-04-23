@@ -6,61 +6,103 @@ import { Download, Heart, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 
-// Sample roadmap data
+// Enhanced sample roadmap data with more detailed steps
 const SAMPLE_ROADMAPS = [
   {
     id: "1",
     title: "Full Stack Web Development",
-    description: "Complete path from HTML basics to deploying full stack applications",
+    description: "Complete path from HTML basics to deploying full stack applications with modern frameworks",
     author: "DevMaster",
     likes: 328,
     downloads: 1240,
-    image: "https://images.unsplash.com/photo-1555099962-4199c345e5dd?q=80&w=400&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1555099962-4199c345e5dd?q=80&w=400&auto=format&fit=crop",
+    steps: [
+      { title: "HTML & CSS Fundamentals", count: 12 },
+      { title: "JavaScript Essentials", count: 15 },
+      { title: "Frontend Framework (React)", count: 18 },
+      { title: "Backend Development", count: 14 },
+      { title: "Database Integration", count: 10 }
+    ]
   },
   {
     id: "2",
     title: "Mobile App Development with React Native",
-    description: "Learn to build cross-platform mobile apps that work on iOS and Android",
+    description: "Learn to build cross-platform mobile apps that work seamlessly on iOS and Android devices",
     author: "AppBuilder",
     likes: 253,
     downloads: 876,
-    image: "https://images.unsplash.com/photo-1551650992-ee4fd47df41f?q=80&w=400&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1551650992-ee4fd47df41f?q=80&w=400&auto=format&fit=crop",
+    steps: [
+      { title: "JavaScript & React Fundamentals", count: 14 },
+      { title: "React Native Basics", count: 16 },
+      { title: "Navigation & State Management", count: 12 },
+      { title: "Native APIs & Components", count: 15 },
+      { title: "App Store Deployment", count: 8 }
+    ]
   },
   {
     id: "3",
     title: "Data Science from Scratch",
-    description: "Master data analysis, visualization and machine learning",
+    description: "Master data analysis, visualization and machine learning algorithms with practical projects",
     author: "DataWizard",
     likes: 412,
     downloads: 1523,
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=400&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=400&auto=format&fit=crop",
+    steps: [
+      { title: "Python Programming", count: 15 },
+      { title: "Data Manipulation with Pandas", count: 18 },
+      { title: "Data Visualization", count: 14 },
+      { title: "Machine Learning Fundamentals", count: 20 },
+      { title: "Deep Learning & Neural Networks", count: 16 }
+    ]
   },
   {
     id: "4",
     title: "DevOps Engineer Path",
-    description: "CI/CD, containerization, and cloud infrastructure mastery",
+    description: "CI/CD, containerization, and cloud infrastructure mastery for modern software delivery",
     author: "CloudMaster",
     likes: 187,
     downloads: 654,
-    image: "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?q=80&w=400&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?q=80&w=400&auto=format&fit=crop",
+    steps: [
+      { title: "Linux Administration", count: 16 },
+      { title: "Docker & Containerization", count: 18 },
+      { title: "Kubernetes Orchestration", count: 22 },
+      { title: "CI/CD Pipeline Setup", count: 14 },
+      { title: "Cloud Platforms (AWS/Azure)", count: 20 }
+    ]
   },
   {
     id: "5",
     title: "Blockchain Development",
-    description: "From crypto fundamentals to building dApps on Ethereum",
+    description: "From crypto fundamentals to building decentralized applications on Ethereum and beyond",
     author: "BlockchainBuilder",
     likes: 209,
     downloads: 783,
-    image: "https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=400&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=400&auto=format&fit=crop",
+    steps: [
+      { title: "Blockchain Fundamentals", count: 14 },
+      { title: "Smart Contract Development", count: 20 },
+      { title: "Ethereum & Solidity", count: 18 },
+      { title: "Web3.js Integration", count: 12 },
+      { title: "DApp Architecture", count: 16 }
+    ]
   },
   {
     id: "6",
     title: "UI/UX Design Journey",
-    description: "Master the principles of great user interface and experience design",
+    description: "Master the principles of great user interface and experience design with industry tools",
     author: "DesignPro",
     likes: 347,
     downloads: 1129,
-    image: "https://images.unsplash.com/photo-1545235617-9465d2a55698?q=80&w=400&auto=format&fit=crop"
+    image: "https://images.unsplash.com/photo-1545235617-9465d2a55698?q=80&w=400&auto=format&fit=crop",
+    steps: [
+      { title: "Design Principles", count: 12 },
+      { title: "Figma Mastery", count: 16 },
+      { title: "User Research Methods", count: 14 },
+      { title: "Prototyping & Testing", count: 18 },
+      { title: "Design Systems", count: 15 }
+    ]
   }
 ];
 
@@ -147,7 +189,21 @@ export const RoadmapList = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="pb-2">
-              <p className="text-gray-600">{roadmap.description}</p>
+              <p className="text-gray-600 mb-3">{roadmap.description}</p>
+              <div className="space-y-1">
+                {roadmap.steps && roadmap.steps.slice(0, 3).map((step, idx) => (
+                  <div key={idx} className="flex items-center text-xs">
+                    <span className="w-2 h-2 rounded-full bg-afro-purple/70 mr-2"></span>
+                    <span className="text-gray-700">{step.title}</span>
+                    <span className="ml-auto text-gray-500">{step.count} steps</span>
+                  </div>
+                ))}
+                {roadmap.steps && roadmap.steps.length > 3 && (
+                  <p className="text-xs text-afro-purple mt-1">
+                    +{roadmap.steps.length - 3} more sections
+                  </p>
+                )}
+              </div>
             </CardContent>
             <CardFooter className="flex justify-between pt-2">
               <Button
