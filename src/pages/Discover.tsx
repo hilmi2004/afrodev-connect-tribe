@@ -189,7 +189,9 @@ const Discover = () => {
                   </div>
                   <div className="flex-1 p-3 text-center">
                     <Button variant="ghost" size="sm" className="text-afro-purple hover:text-afro-purple/80 flex items-center justify-center w-full">
+                      <a href="/devprof">
                       View Profile
+                      </a>
                       <ChevronRight className="h-4 w-4 ml-1" />
                     </Button>
                   </div>
@@ -201,6 +203,7 @@ const Discover = () => {
         
         <div className="text-center">
           <Button className="bg-afro-purple hover:bg-afro-purple/90">
+
             Load More Developers
           </Button>
         </div>

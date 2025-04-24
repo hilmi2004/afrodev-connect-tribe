@@ -55,13 +55,14 @@ export default {
 				},
 				// African-inspired color palette
 				afro: {
-					purple: '#8B5CF6', // Primary purple
+					purple: '#1A1F2C', // Primary purple
 					green: '#10B981', // Vibrant green
 					red: '#EA384C', // Warm red
 					gold: '#F59E0B', // Gold accent
 					black: '#1A1F2C', // Deep black
 					brown: '#78350F', // Rich brown
-					blue: '#3B82F6' // Blue accent (new)
+					blue: '#3B82F6', // Blue accent (new)
+					white: '#ffffff',
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',

@@ -236,7 +236,7 @@ const CareerAdvice = () => {
             animate="visible"
             className="text-center mb-12"
           >
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-afro-purple via-afro-gold to-afro-green bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl font-bold bg-afro-gold bg-clip-text text-transparent">
               Career Advice
             </h1>
             <p className="mt-4 text-gray-600 max-w-3xl mx-auto">
@@ -246,13 +246,13 @@ const CareerAdvice = () => {
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-12">
             <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 mb-12 bg-white/50 backdrop-blur-sm border border-afro-purple/20 shadow-lg overflow-hidden rounded-xl">
-              <TabsTrigger value="articles" className="text-base py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-afro-purple data-[state=active]:to-afro-gold data-[state=active]:text-white">
+              <TabsTrigger value="articles" className="text-base py-3  data-[state=active]:bg-afro-gold data-[state=active]:text-white">
                 Articles
               </TabsTrigger>
-              <TabsTrigger value="resources" className="text-base py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-afro-purple data-[state=active]:to-afro-gold data-[state=active]:text-white">
+              <TabsTrigger value="resources" className="text-base py-3  data-[state=active]:bg-afro-gold data-[state=active]:text-white">
                 Resources
               </TabsTrigger>
-              <TabsTrigger value="events" className="text-base py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-afro-purple data-[state=active]:to-afro-gold data-[state=active]:text-white">
+              <TabsTrigger value="events" className="text-base py-3  data-[state=active]:bg-afro-gold data-[state=active]:text-white">
                 Events
               </TabsTrigger>
             </TabsList>

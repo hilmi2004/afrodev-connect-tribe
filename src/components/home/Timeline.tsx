@@ -1,9 +1,20 @@
-
+import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+interface TimelineEvent {
+  year: string;
+  title: string;
+  description: string;
+  type: "education" | "work" | "project" | "event";
+}
 
 export function Timeline() {
-  const timelineEvents = [
+  const timelineEvents: TimelineEvent[] = [
     {
       year: "2019",
       title: "Started Learning to Code",
@@ -42,7 +53,7 @@ export function Timeline() {
     }
   ];
 
-  const getBadgeColor = (type: string) => {
+  const getBadgeColor = (type: string): string => {
     switch(type) {
       case "education": return "bg-blue-100 text-blue-700";
       case "work": return "bg-green-100 text-green-700";
@@ -51,6 +62,48 @@ export function Timeline() {
       default: return "bg-gray-100 text-gray-700";
     }
   };
+
+  useEffect(() => {
+    // Scroll-triggered animations for timeline items
+    gsap.utils.toArray(".timeline-event").forEach((el: HTMLElement, i) => {
+      gsap.from(el, {
+        opacity: 0,
+        x: -50,
+        duration: 0.8,
+        delay: i * 0.1,
+        scrollTrigger: {
+          trigger: el,
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      });
+    });
+
+    // Scroll-triggered animation for profile card header
+    gsap.from(".timeline-card-header", {
+      opacity: 0,
+      y: -40,
+      duration: 0.8,
+      scrollTrigger: {
+        trigger: ".timeline-card-header",
+        start: "top 80%",
+        toggleActions: "play none none reverse",
+      },
+    });
+
+    // Timeline dot animation (pulse effect)
+    gsap.utils.toArray(".timeline-dot").forEach((dot: HTMLElement) => {
+      gsap.from(dot, {
+        scale: 0,
+        opacity: 0,
+        duration: 0.5,
+        scrollTrigger: {
+          trigger: dot,
+          start: "top 90%",
+        },
+      });
+    });
+  }, []);
 
   return (
     <section className="w-full py-20 px-6">
@@ -63,7 +116,7 @@ export function Timeline() {
         </div>
         
         <Card className="border border-gray-200 overflow-hidden">
-          <CardHeader className="bg-afro-purple/10 border-b border-gray-200">
+          <CardHeader className="bg-afro-purple/10 border-b border-gray-200 timeline-card-header">
             <div className="flex items-center">
               <img
                 src="https://randomuser.me/api/portraits/men/32.jpg"
@@ -79,8 +132,11 @@ export function Timeline() {
           <CardContent className="p-0">
             <div className="relative pl-8 py-8 border-l-2 border-afro-purple/30 ml-8">
               {timelineEvents.map((event, index) => (
-                <div key={index} className="mb-8 last:mb-0 relative">
-                  <div className="absolute w-4 h-4 bg-afro-purple rounded-full -left-10 top-1.5 border-4 border-white"></div>
+                <div
+                  key={index}
+                  className="timeline-event mb-8 last:mb-0 relative"
+                >
+                  <div className="timeline-dot absolute w-4 h-4 bg-afro-purple rounded-full -left-10 top-1.5 border-4 border-white"></div>
                   <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6">
                     <Badge variant="outline" className="text-afro-purple border-afro-purple w-fit px-3 py-1">
                       {event.year}

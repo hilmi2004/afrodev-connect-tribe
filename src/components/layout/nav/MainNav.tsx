@@ -23,9 +23,9 @@ const navImages = {
 };
 
 const featuredProjects = [
-  { label: "Project Spotlight: UmojaPay", href: "/projects/umojapay" },
-  { label: "Award Winner: SheCodes Africa", href: "/projects/shecodes" },
-  { label: "Editor's Pick: Kijiji Connect", href: "/projects/kijiji-connect" },
+  { label: "Project Spotlight: UmojaPay", href: "/projectspot" },
+  { label: "Award Winner: SheCodes Africa", href: "/projectspot" },
+  { label: "Editor's Pick: Kijiji Connect", href: "/projectspot" },
 ];
 
 export const MainNav = () => {
@@ -88,9 +88,9 @@ export const MainNav = () => {
         image={navImages.resources}
         imageAlt="Resources and learning"
         items={[
-          { label: "Tech News", href: "#", icon: <BookOpen size={17} /> },
-          { label: "Dev Tools & Tutorials", href: "#", icon: <BookOpen size={17} /> },
-          { label: "Career Advice", href: "#", icon: <BookOpen size={17} /> },
+          { label: "Tech News", href: "/technews", icon: <BookOpen size={17} /> },
+          { label: "Dev Tools & Tutorials", href: "/dev-tools", icon: <BookOpen size={17} /> },
+          { label: "Career Advice", href: "/careeradvice", icon: <BookOpen size={17} /> },
         ]}
         visualLabel="Resources"
       />
@@ -105,8 +105,8 @@ export const MainNav = () => {
         image={navImages.community}
         imageAlt="Local connect and forums"
         items={[
-          { label: "Local Connect", href: "#", icon: <Globe size={17} /> },
-          { label: "Forums", href: "#", icon: <Users size={17} /> },
+          { label: "Local Connect", href: "/localconnect", icon: <Globe size={17} /> },
+          { label: "Forums", href: "/forum", icon: <Users size={17} /> },
         ]}
         visualLabel="Community"
       />
@@ -121,9 +121,9 @@ export const MainNav = () => {
         image={navImages.events}
         imageAlt="Events and hackathons"
         items={[
-          { label: "Upcoming Hackathons", href: "#", icon: <Calendar size={17} /> },
-          { label: "Dev Meetups", href: "#", icon: <Calendar size={17} /> },
-          { label: "Webinars", href: "#", icon: <Calendar size={17} /> },
+          { label: "Upcoming Hackathons", href: "/hackathon", icon: <Calendar size={17} /> },
+          { label: "Dev Meetups", href: "/meetups", icon: <Calendar size={17} /> },
+          { label: "Webinars", href: "/webinar", icon: <Calendar size={17} /> },
         ]}
         visualLabel="Events"
       />

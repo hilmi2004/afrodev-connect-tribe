@@ -11,7 +11,7 @@ const tribes = [
     location: "Nairobi, Kenya",
     members: 230,
     tags: ["JavaScript", "React", "Node.js"],
-    image: "https://images.unsplash.com/photo-1605479590064-cbb421f33779?auto=format&fit=crop&w=800&q=80"
+    image: "https://images.unsplash.com/photo-1653564142048-d5af2cf9b50f?q=80&w=1930&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   },
   {
     id: 2,

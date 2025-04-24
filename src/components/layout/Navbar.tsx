@@ -5,14 +5,13 @@ import { NavActions } from "./nav/NavActions";
 
 export function Navbar() {
   return (
-    <header
-      className="w-full sticky top-0 left-0 z-40 bg-white shadow-sm border-b border-gray-200 flex items-center justify-between px-2 md:px-8 py-3 md:py-4 transition-all backdrop-blur-md"
-      style={{ minHeight: "68px" }}
-    >
-      <Logo />
-      <MainNav />
-      <NavActions />
-    </header>
+   <div className="flex items-center justify-between w-full px-4 overflow-hidden">
+  <div className="flex items-center flex-1 min-w-0">
+    <MainNav />
+  </div>
+  <div className="flex-shrink-0">
+    <NavActions />
+  </div>
+</div>
   );
 }
-
