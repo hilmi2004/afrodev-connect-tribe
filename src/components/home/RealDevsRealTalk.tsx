@@ -47,11 +47,14 @@ export function RealDevsRealTalk() {
   const [textComplete, setTextComplete] = useState(false);
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
 
-  const plugin = useState(() => 
-    Autoplay({ delay: 5000, stopOnInteraction: true })
+  // Create the autoplay plugin instance directly
+  const autoplayPlugin = Autoplay({ delay: 5000, stopOnInteraction: true });
+  
+  // Pass the plugin as an array to useEmblaCarousel
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true },
+    [autoplayPlugin]
   );
-
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, plugin);
 
   useEffect(() => {
     if (emblaApi) {
