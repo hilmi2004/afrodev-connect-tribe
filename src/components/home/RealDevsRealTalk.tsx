@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import {
   Carousel,
@@ -47,10 +46,8 @@ export function RealDevsRealTalk() {
   const [textComplete, setTextComplete] = useState(false);
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
 
-  // Create the autoplay plugin instance directly
   const autoplayPlugin = Autoplay({ delay: 5000, stopOnInteraction: true });
   
-  // Pass the plugin as an array to useEmblaCarousel
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true },
     [autoplayPlugin]
@@ -86,9 +83,17 @@ export function RealDevsRealTalk() {
   }, [currentQuoteIndex, textComplete]);
 
   return (
-    <section className="w-full py-20 px-6 bg-afro-black text-white">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
+    <section className="w-full py-20 px-6 bg-afro-black relative overflow-hidden">
+      <div 
+        className="absolute inset-0 opacity-5"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundRepeat: 'repeat'
+        }}
+      />
+      
+      <div className="max-w-6xl mx-auto relative">
+        <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center text-white">
           Real Devs, Real Talk
         </h2>
         
@@ -109,22 +114,27 @@ export function RealDevsRealTalk() {
                   exit={{ opacity: 0, y: -20 }}
                   className="flex flex-col items-center text-center px-6 md:px-12"
                 >
-                  <div className="mb-8 min-h-[200px] flex items-center justify-center">
-                    <p className="text-xl md:text-2xl leading-relaxed">
-                      {currentQuoteIndex === index ? currentText : quote.text}
-                    </p>
-                  </div>
-                  
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={quote.avatar}
-                      alt={quote.author}
-                      className="w-12 h-12 rounded-full border-2 border-afro-purple"
-                    />
-                    <div className="text-left">
-                      <p className="font-semibold text-afro-purple">{quote.author}</p>
-                      <p className="text-sm text-gray-400">{quote.role}</p>
-                      <p className="text-sm text-gray-400">{quote.country}</p>
+                  <div className="bg-gradient-to-br from-afro-purple/10 to-afro-black/30 backdrop-blur-sm rounded-xl p-8 border border-afro-purple/20 shadow-lg mb-8">
+                    <div className="mb-8 min-h-[200px] flex items-center justify-center">
+                      <p className="text-xl md:text-2xl leading-relaxed text-white">
+                        {currentQuoteIndex === index ? currentText : quote.text}
+                      </p>
+                    </div>
+                    
+                    <div className="flex items-center gap-4 justify-center">
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-gradient-to-br from-afro-purple via-afro-gold to-afro-red rounded-full blur-sm opacity-50"></div>
+                        <img
+                          src={quote.avatar}
+                          alt={quote.author}
+                          className="w-16 h-16 rounded-full border-2 border-afro-purple relative"
+                        />
+                      </div>
+                      <div className="text-left">
+                        <p className="font-semibold text-afro-purple text-lg">{quote.author}</p>
+                        <p className="text-sm text-gray-300">{quote.role}</p>
+                        <p className="text-sm text-gray-300">{quote.country}</p>
+                      </div>
                     </div>
                   </div>
                 </MotionDiv>
@@ -132,8 +142,8 @@ export function RealDevsRealTalk() {
             ))}
           </CarouselContent>
           
-          <CarouselPrevious className="hidden md:flex" />
-          <CarouselNext className="hidden md:flex" />
+          <CarouselPrevious className="hidden md:flex text-white border-afro-purple hover:bg-afro-purple/20" />
+          <CarouselNext className="hidden md:flex text-white border-afro-purple hover:bg-afro-purple/20" />
         </Carousel>
       </div>
     </section>
