@@ -1,7 +1,7 @@
-
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Heart, MessageSquare, Bookmark, Share } from "lucide-react";
+import { useState } from "react";
 
 const projects = [
   {
@@ -51,7 +51,58 @@ const projects = [
   }
 ];
 
+const additionalProjects = [
+  {
+    id: 4,
+    title: "HealthConnect Africa",
+    description: "Telemedicine platform connecting rural communities with healthcare professionals.",
+    image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=600&h=400",
+    author: {
+      name: "David Mensah",
+      country: "Ghana",
+      avatar: "https://randomuser.me/api/portraits/men/22.jpg"
+    },
+    tags: ["React Native", "Express", "MongoDB", "WebRTC"],
+    likes: 156,
+    comments: 28,
+    bookmarks: 67
+  },
+  {
+    id: 5,
+    title: "EcoTrack",
+    description: "Environmental monitoring system for tracking pollution levels in major African cities.",
+    image: "https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&w=600&h=400",
+    author: {
+      name: "Sarah Kimani",
+      country: "Kenya",
+      avatar: "https://randomuser.me/api/portraits/women/29.jpg"
+    },
+    tags: ["IoT", "Python", "TensorFlow", "AWS"],
+    likes: 92,
+    comments: 15,
+    bookmarks: 38
+  },
+  {
+    id: 6,
+    title: "AgriTech Solutions",
+    description: "Smart farming platform using AI to optimize crop yields for small-scale farmers.",
+    image: "https://images.unsplash.com/photo-1590682687861-89c0c62f3b51?auto=format&fit=crop&w=600&h=400",
+    author: {
+      name: "Emmanuel Tamba",
+      country: "Nigeria",
+      avatar: "https://randomuser.me/api/portraits/men/45.jpg"
+    },
+    tags: ["Machine Learning", "Django", "PostgreSQL"],
+    likes: 178,
+    comments: 34,
+    bookmarks: 89
+  }
+];
+
 export function ProjectShowcase() {
+  const [showMore, setShowMore] = useState(false);
+  const displayedProjects = showMore ? [...projects, ...additionalProjects] : projects;
+
   return (
     <section className="w-full py-20 px-6">
       <div className="max-w-6xl mx-auto">
@@ -66,7 +117,7 @@ export function ProjectShowcase() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project) => (
+          {displayedProjects.map((project) => (
             <Card key={project.id} className="overflow-hidden group transition-all hover:shadow-lg">
               <div className="h-48 overflow-hidden">
                 <img 
@@ -118,9 +169,12 @@ export function ProjectShowcase() {
         </div>
         
         <div className="text-center mt-12">
-          <button className="px-6 py-3 bg-afro-purple text-white rounded-md hover:bg-afro-purple/90 transition-colors">
-            Show More Projects
-          </button>
+          <Button 
+            onClick={() => setShowMore(!showMore)}
+            className="px-6 py-3 bg-afro-purple text-white rounded-md hover:bg-afro-purple/90 transition-colors"
+          >
+            {showMore ? "Show Less" : "Show More Projects"}
+          </Button>
         </div>
       </div>
     </section>

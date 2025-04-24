@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Users } from "lucide-react";
+import { Users, Image } from "lucide-react";
 
 export function TribeCreate() {
   const [open, setOpen] = useState(false);
@@ -13,6 +12,7 @@ export function TribeCreate() {
   const [desc, setDesc] = useState("");
   const [tags, setTags] = useState("");
   const [location, setLocation] = useState("");
+  const [image, setImage] = useState<string>("");
 
   function handleCreate() {
     if(!name.trim()) {
@@ -25,7 +25,7 @@ export function TribeCreate() {
     setDesc("");
     setTags("");
     setLocation("");
-    // In a real app, call API here.
+    setImage("");
   }
 
   return (
@@ -44,6 +44,29 @@ export function TribeCreate() {
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 py-2">
+          <div>
+            <label htmlFor="tribe-image" className="block font-medium mb-1 text-afro-purple">Tribe Image</label>
+            <div className="flex gap-2">
+              <Input
+                id="tribe-image"
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => setImage(e.target?.result as string);
+                    reader.readAsDataURL(file);
+                  }
+                }}
+              />
+              {image && (
+                <div className="w-16 h-16 rounded-lg overflow-hidden">
+                  <img src={image} alt="Tribe preview" className="w-full h-full object-cover" />
+                </div>
+              )}
+            </div>
+          </div>
           <div>
             <label htmlFor="tribe-name" className="block font-medium mb-1 text-afro-purple">Name*</label>
             <Input value={name} id="tribe-name" onChange={e => setName(e.target.value)} placeholder="e.g. Africa React Devs" />
