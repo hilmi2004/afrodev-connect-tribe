@@ -90,11 +90,31 @@ const sampleRoadmaps = [
   }
 ];
 
+interface RoadmapType {
+  id: string;
+  title: string;
+  description: string;
+  steps: Array<{
+    id: number | string;
+    title: string;
+    description: string;
+    tags: string[];
+    links: Array<{ title: string; url: string }>;
+    children?: Array<{
+      id: string;
+      title: string;
+      description: string;
+      tags: string[];
+      links: Array<{ title: string; url: string }>;
+    }>;
+  }>;
+}
+
 const Roadmap = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<string>("browse");
-  const [currentRoadmap, setCurrentRoadmap] = useState<any>(null);
+  const [currentRoadmap, setCurrentRoadmap] = useState<RoadmapType | null>(null);
   const [roadmapNotFound, setRoadmapNotFound] = useState<boolean>(false);
   
   useEffect(() => {
