@@ -23,6 +23,7 @@ import Forum from "@/pages/Forum.tsx";
 import DevProfile from "@/pages/DevProfile.tsx";
 import LocalConnect from "@/pages/LocalConnect.tsx";
 import CareerAdvice from "@/pages/CareerAdvice.tsx";
+import TribeDetail from "@/pages/TribeDetail.tsx";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/register" element={<Register />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/tribes" element={<Tribes />} />
+          <Route path="/tribes/:id" element={<TribeDetail />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/about" element={<About />} />
           <Route path="/roadmap" element={<Roadmap />} />
@@ -50,14 +52,6 @@ const App = () => (
           <Route path="/devprof" element={<DevProfile/>} />
           <Route path="/localconnect" element={<LocalConnect/>} />
           <Route path="/careeradvice" element={<CareerAdvice/>} />
-
-
-
-
-
-
-
-
           <Route path="/meetups" element={<Meetups />} />
           <Route path="/dev-tools" element={<DevTools />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
