@@ -110,6 +110,16 @@ interface RoadmapType {
   }>;
 }
 
+// Adding proper type definition for the RoadmapDetail component props
+interface RoadmapDetailProps {
+  roadmap: RoadmapType;
+}
+
+// Adding proper type definition for the RoadmapList component props
+interface RoadmapListProps {
+  roadmaps: typeof sampleRoadmaps;
+}
+
 const Roadmap = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -159,7 +169,7 @@ const Roadmap = () => {
               </Alert>
             </MotionDiv>
           ) : (
-            currentRoadmap && <RoadmapDetail roadmap={currentRoadmap} />
+            currentRoadmap && <RoadmapDetail roadmap={currentRoadmap as RoadmapType} />
           )}
         </div>
       </MainLayout>

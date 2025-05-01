@@ -6,7 +6,25 @@ import { Download, Heart, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 
-// Enhanced sample roadmap data with more detailed steps
+interface RoadmapInList {
+  id: string;
+  title: string;
+  description: string;
+  author: string;
+  likes: number;
+  downloads: number;
+  image: string;
+  steps?: Array<{
+    title: string;
+    count: number;
+  }>;
+}
+
+interface RoadmapListProps {
+  roadmaps: Array<any>;
+}
+
+// Sample roadmap data
 const SAMPLE_ROADMAPS = [
   {
     id: "1",
@@ -106,35 +124,35 @@ const SAMPLE_ROADMAPS = [
   }
 ];
 
-export const RoadmapList = () => {
+export const RoadmapList = ({ roadmaps }: RoadmapListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [roadmaps, setRoadmaps] = useState(SAMPLE_ROADMAPS);
+  const [displayRoadmaps, setDisplayRoadmaps] = useState(roadmaps.length > 0 ? roadmaps : SAMPLE_ROADMAPS);
   const navigate = useNavigate();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredRoadmaps = roadmaps.filter(roadmap => 
+  const filteredRoadmaps = displayRoadmaps.filter(roadmap => 
     roadmap.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     roadmap.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleLike = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setRoadmaps(roadmaps.map(roadmap => 
+    setDisplayRoadmaps(displayRoadmaps.map(roadmap => 
       roadmap.id === id ? { ...roadmap, likes: roadmap.likes + 1 } : roadmap
     ));
   };
 
   const handleDownload = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setRoadmaps(roadmaps.map(roadmap => 
+    setDisplayRoadmaps(displayRoadmaps.map(roadmap => 
       roadmap.id === id ? { ...roadmap, downloads: roadmap.downloads + 1 } : roadmap
     ));
     
     // In a real app, this would trigger a download of the roadmap file
-    const roadmap = roadmaps.find(r => r.id === id);
+    const roadmap = displayRoadmaps.find(r => r.id === id);
     if (roadmap) {
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(roadmap));
       const downloadAnchorNode = document.createElement('a');

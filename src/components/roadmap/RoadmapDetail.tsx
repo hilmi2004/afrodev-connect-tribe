@@ -5,6 +5,36 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Download, Heart, Link } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
+// Define the interface for the roadmap prop
+interface RoadmapType {
+  id: string;
+  title: string;
+  description: string;
+  author?: string;
+  likes?: number;
+  downloads?: number;
+  image?: string;
+  steps: Array<{
+    id: number | string;
+    title: string;
+    description: string;
+    tags?: string[];
+    links: Array<{ title: string; url: string }>;
+    children?: Array<{
+      id: string | number;
+      title: string;
+      description: string;
+      tags?: string[];
+      links: Array<{ title: string; url: string }>;
+      children?: any[];
+    }>;
+  }>;
+}
+
+interface RoadmapDetailProps {
+  roadmap: RoadmapType;
+}
+
 // Sample roadmap data (in a real app, this would come from an API)
 const SAMPLE_ROADMAPS = [
   {
@@ -185,19 +215,9 @@ const SAMPLE_ROADMAPS = [
   }
 ];
 
-export const RoadmapDetail = () => {
-  const { id } = useParams();
+export const RoadmapDetail = ({ roadmap }: RoadmapDetailProps) => {
   const navigate = useNavigate();
-  const [roadmap, setRoadmap] = useState<any | null>(null);
   const [liked, setLiked] = useState(false);
-
-  useEffect(() => {
-    // In a real app, this would fetch from an API
-    const foundRoadmap = SAMPLE_ROADMAPS.find(r => r.id === id);
-    if (foundRoadmap) {
-      setRoadmap(foundRoadmap);
-    }
-  }, [id]);
 
   const handleLike = () => {
     setLiked(!liked);
@@ -215,17 +235,6 @@ export const RoadmapDetail = () => {
       downloadAnchorNode.remove();
     }
   };
-
-  if (!roadmap) {
-    return (
-      <div className="text-center py-16">
-        <p className="text-lg text-gray-500">Roadmap not found.</p>
-        <Button onClick={() => navigate("/roadmap")} variant="outline" className="mt-4">
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Roadmaps
-        </Button>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -247,7 +256,7 @@ export const RoadmapDetail = () => {
           <h1 className="text-4xl font-bold text-white bg-gradient-to-r from-white to-afro-purple bg-clip-text text-transparent">
             {roadmap.title}
           </h1>
-          <p className="text-white/90 mt-2">Created by {roadmap.author}</p>
+          <p className="text-white/90 mt-2">Created by {roadmap.author || "Anonymous"}</p>
         </div>
       </div>
       
@@ -261,7 +270,7 @@ export const RoadmapDetail = () => {
             className={`flex items-center gap-1 transition-all ${liked ? 'bg-afro-red text-white hover:bg-afro-red/90' : 'hover:border-afro-red hover:text-afro-red'}`}
           >
             <Heart size={16} className={liked ? "text-white" : "text-afro-red"} />
-            <span>{liked ? roadmap.likes + 1 : roadmap.likes}</span>
+            <span>{liked ? (roadmap.likes || 0) + 1 : (roadmap.likes || 0)}</span>
           </Button>
           <Button
             onClick={handleDownload}
