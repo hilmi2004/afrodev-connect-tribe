@@ -6,9 +6,11 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowRight, ArrowLeft, Check, User, Mail, Lock, MapPin, Briefcase, Code, Calendar, Heart } from "lucide-react";
+import { ArrowRight, ArrowLeft, Check, User, Mail, Lock, MapPin, Briefcase, Code, Calendar, Heart, MessageSquare, Star, Headphones, Info } from "lucide-react";
 import { toast } from "sonner";
 import { MotionDiv, fadeIn, slideInUp } from "@/components/ui/motion";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface RegistrationData {
   fullName: string;
@@ -24,6 +26,14 @@ interface RegistrationData {
   careerGoals: string;
   communicationPreference: string;
   githubUsername: string;
+  referralSource: string;
+  platformGoals: string[];
+  preferredCommunication: string;
+  timeZone: string;
+  workStyle: string;
+  meetupInterest: boolean;
+  mentorInterest: string;
+  expectationsFromPlatform: string;
   agreedToTerms: boolean;
 }
 
@@ -58,6 +68,45 @@ const careerGoals = [
   "Open Source contribution"
 ];
 
+const referralSources = [
+  "Social Media", 
+  "Search Engine", 
+  "Friend/Colleague", 
+  "Tech Event/Conference", 
+  "Blog/Article", 
+  "YouTube/Video", 
+  "Tech Community", 
+  "Other"
+];
+
+const platformGoals = [
+  "Find collaborators for projects",
+  "Learn new technologies",
+  "Network with African developers",
+  "Share knowledge/mentor others",
+  "Stay updated on local tech trends",
+  "Find job opportunities",
+  "Build portfolio projects",
+  "Participate in hackathons"
+];
+
+const timeZones = [
+  "GMT (West Africa)",
+  "GMT+1 (West/Central Africa)",
+  "GMT+2 (Central/Southern Africa)",
+  "GMT+3 (East Africa)",
+  "Other"
+];
+
+const workStyles = [
+  "Full-time employed developer",
+  "Part-time developer",
+  "Freelancer",
+  "Student",
+  "Career-switcher",
+  "Hobbyist"
+];
+
 export const RegistrationFlow = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<RegistrationData>({
@@ -74,12 +123,20 @@ export const RegistrationFlow = () => {
     careerGoals: "",
     communicationPreference: "email",
     githubUsername: "",
+    referralSource: "",
+    platformGoals: [],
+    preferredCommunication: "asynchronous",
+    timeZone: "",
+    workStyle: "",
+    meetupInterest: false,
+    mentorInterest: "both",
+    expectationsFromPlatform: "",
     agreedToTerms: false,
   });
   
-  const totalSteps = 6;
+  const totalSteps = 8; // Updated to include new steps
   
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -100,6 +157,10 @@ export const RegistrationFlow = () => {
         };
       }
     });
+  };
+  
+  const handleBooleanChange = (checked: boolean, name: keyof RegistrationData) => {
+    setFormData(prev => ({ ...prev, [name]: checked }));
   };
   
   const handleSelectChange = (value: string, name: keyof RegistrationData) => {
@@ -506,8 +567,179 @@ export const RegistrationFlow = () => {
             </div>
           </MotionDiv>
         );
+
+      case 6: // NEW: Discover & Referral
+        return (
+          <MotionDiv
+            initial="hidden"
+            animate="visible"
+            variants={fadeIn()}
+            className="space-y-6"
+          >
+            <div className="relative bg-gradient-to-r from-afro-purple to-afro-blue overflow-hidden h-40 rounded-xl mb-6">
+              <img 
+                src="https://images.unsplash.com/photo-1560472355-536de3962603?q=80&w=1000&auto=format&fit=crop" 
+                alt="Discovery" 
+                className="w-full h-full object-cover opacity-30"
+              />
+              <div className="absolute inset-0 flex items-center justify-center flex-col">
+                <h2 className="text-white text-2xl font-bold">Discovery & Referral</h2>
+                <p className="text-white text-opacity-80">Tell us how you found us and what you're looking for</p>
+              </div>
+            </div>
+            
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <Label className="flex items-center text-lg font-medium">
+                  <Info size={16} className="mr-2 text-afro-purple" />
+                  How did you hear about AfroDevConnect?
+                </Label>
+                <RadioGroup 
+                  value={formData.referralSource} 
+                  onValueChange={(value) => handleSelectChange(value, 'referralSource')}
+                  className="grid grid-cols-1 md:grid-cols-2 gap-3"
+                >
+                  {referralSources.map((source) => (
+                    <div key={source} className="flex items-center space-x-2 bg-white p-3 rounded-lg border border-gray-200 hover:border-afro-purple/50 transition-colors">
+                      <RadioGroupItem value={source} id={source} />
+                      <Label htmlFor={source} className="cursor-pointer flex-grow">{source}</Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              </div>
+              
+              <div className="space-y-3">
+                <Label className="flex items-center text-lg font-medium">
+                  <Star size={16} className="mr-2 text-afro-purple" />
+                  What do you hope to gain from using AfroDevConnect?
+                </Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {platformGoals.map((goal) => (
+                    <div key={goal} className="flex items-center space-x-2 bg-white p-2 rounded-lg border border-gray-200 hover:border-afro-purple/50 transition-colors">
+                      <Checkbox 
+                        id={`goal-${goal}`} 
+                        checked={formData.platformGoals.includes(goal)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            handleCheckboxChange(goal, 'platformGoals');
+                          } else {
+                            handleCheckboxChange(goal, 'platformGoals');
+                          }
+                        }}
+                      />
+                      <Label htmlFor={`goal-${goal}`} className="cursor-pointer">{goal}</Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </MotionDiv>
+        );
+
+      case 7: // NEW: Work & Collaboration
+        return (
+          <MotionDiv
+            initial="hidden"
+            animate="visible"
+            variants={fadeIn()}
+            className="space-y-6"
+          >
+            <div className="relative bg-gradient-to-r from-afro-green to-afro-red overflow-hidden h-40 rounded-xl mb-6">
+              <img 
+                src="https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=1000&auto=format&fit=crop" 
+                alt="Collaboration" 
+                className="w-full h-full object-cover opacity-30"
+              />
+              <div className="absolute inset-0 flex items-center justify-center flex-col">
+                <h2 className="text-white text-2xl font-bold">Work & Collaboration</h2>
+                <p className="text-white text-opacity-80">Help us understand your work preferences</p>
+              </div>
+            </div>
+            
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <Label className="flex items-center text-lg font-medium">
+                  <Clock size={16} className="mr-2 text-afro-purple" />
+                  What time zone are you in?
+                </Label>
+                <RadioGroup 
+                  value={formData.timeZone} 
+                  onValueChange={(value) => handleSelectChange(value, 'timeZone')}
+                  className="grid grid-cols-1 md:grid-cols-2 gap-3"
+                >
+                  {timeZones.map((tz) => (
+                    <div key={tz} className="flex items-center space-x-2 bg-white p-3 rounded-lg border border-gray-200 hover:border-afro-purple/50 transition-colors">
+                      <RadioGroupItem value={tz} id={tz} />
+                      <Label htmlFor={tz} className="cursor-pointer flex-grow">{tz}</Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              </div>
+              
+              <div className="space-y-3">
+                <Label className="flex items-center text-lg font-medium">
+                  <Briefcase size={16} className="mr-2 text-afro-purple" />
+                  Which best describes your current work style?
+                </Label>
+                <RadioGroup 
+                  value={formData.workStyle} 
+                  onValueChange={(value) => handleSelectChange(value, 'workStyle')}
+                  className="space-y-2"
+                >
+                  {workStyles.map((style) => (
+                    <div key={style} className="flex items-center space-x-2 bg-white p-3 rounded-lg border border-gray-200 hover:border-afro-purple/50 transition-colors">
+                      <RadioGroupItem value={style} id={style} />
+                      <Label htmlFor={style} className="cursor-pointer flex-grow">{style}</Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              </div>
+              
+              <div className="space-y-3">
+                <Label className="text-lg font-medium">Meetups & Mentorship</Label>
+                
+                <div className="bg-white p-4 rounded-lg border border-gray-200 space-y-4">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="meetupInterest"
+                      checked={formData.meetupInterest}
+                      onCheckedChange={(checked) => handleBooleanChange(checked as boolean, 'meetupInterest')}
+                    />
+                    <Label htmlFor="meetupInterest">I'm interested in attending in-person tech meetups</Label>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium">I'm interested in:</Label>
+                    <RadioGroup 
+                      value={formData.mentorInterest} 
+                      onValueChange={(value) => handleSelectChange(value, 'mentorInterest')}
+                      className="space-y-2 pl-4"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="mentor" id="mentor" />
+                        <Label htmlFor="mentor">Being a mentor</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="mentee" id="mentee" />
+                        <Label htmlFor="mentee">Being a mentee</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="both" id="both" />
+                        <Label htmlFor="both">Both mentoring and being mentored</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="neither" id="neither" />
+                        <Label htmlFor="neither">Neither at this time</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </MotionDiv>
+        );
         
-      case 6:
+      case 8: // Final step (previously step 6)
         return (
           <MotionDiv
             initial="hidden"
@@ -528,49 +760,101 @@ export const RegistrationFlow = () => {
             </div>
             
             <div className="space-y-6">
+              <div className="space-y-3">
+                <Label htmlFor="expectationsFromPlatform" className="text-lg font-medium flex items-center">
+                  <MessageSquare size={16} className="mr-2 text-afro-purple" />
+                  Any specific expectations from AfroDevConnect?
+                </Label>
+                <Textarea 
+                  id="expectationsFromPlatform"
+                  name="expectationsFromPlatform"
+                  placeholder="Share any specific expectations, suggestions, or questions you have..."
+                  value={formData.expectationsFromPlatform}
+                  onChange={handleInputChange}
+                  className="min-h-[100px]"
+                />
+              </div>
+            
               <div className="bg-afro-purple/5 border border-afro-purple/20 rounded-xl p-6 space-y-4">
                 <h3 className="font-semibold text-xl text-afro-purple">Registration Summary</h3>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500">Personal Info</h4>
-                    <p className="text-gray-900">{formData.fullName}</p>
-                    <p className="text-gray-900">{formData.email}</p>
-                    <p className="text-gray-900">{formData.country}</p>
-                  </div>
+                <Tabs defaultValue="personal" className="w-full">
+                  <TabsList className="grid grid-cols-3 mb-4">
+                    <TabsTrigger value="personal">Personal Info</TabsTrigger>
+                    <TabsTrigger value="tech">Tech Profile</TabsTrigger>
+                    <TabsTrigger value="preferences">Preferences</TabsTrigger>
+                  </TabsList>
                   
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500">Developer Profile</h4>
-                    <p className="text-gray-900">Experience: {formData.experience}</p>
-                    <p className="text-gray-900">Started coding: {formData.startYear}</p>
-                    <p className="text-gray-900">
-                      Languages: {formData.programmingLanguages.join(", ") || "Not specified"}
-                    </p>
-                  </div>
+                  <TabsContent value="personal" className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-500">Basic Info</h4>
+                        <p className="text-gray-900">{formData.fullName}</p>
+                        <p className="text-gray-900">{formData.email}</p>
+                        <p className="text-gray-900">{formData.country}</p>
+                      </div>
+                      
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-500">Work & Timezone</h4>
+                        <p className="text-gray-900">Time Zone: {formData.timeZone || "Not specified"}</p>
+                        <p className="text-gray-900">Work Style: {formData.workStyle || "Not specified"}</p>
+                      </div>
+                    </div>
+                  </TabsContent>
                   
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500">Interests & Goals</h4>
-                    <p className="text-gray-900">
-                      Interests: {formData.interests.join(", ") || "Not specified"}
-                    </p>
-                    <p className="text-gray-900">
-                      Career Goal: {formData.careerGoals || "Not specified"}
-                    </p>
-                  </div>
+                  <TabsContent value="tech" className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-500">Developer Profile</h4>
+                        <p className="text-gray-900">Experience: {formData.experience || "Not specified"}</p>
+                        <p className="text-gray-900">Started coding: {formData.startYear || "Not specified"}</p>
+                        <p className="text-gray-900">
+                          Languages: {formData.programmingLanguages.join(", ") || "Not specified"}
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-500">Interests & Goals</h4>
+                        <p className="text-gray-900">
+                          Interests: {formData.interests.join(", ") || "Not specified"}
+                        </p>
+                        <p className="text-gray-900">
+                          Career Goal: {formData.careerGoals || "Not specified"}
+                        </p>
+                      </div>
+                    </div>
+                  </TabsContent>
                   
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-500">Learning & Communication</h4>
-                    <p className="text-gray-900">
-                      Learning Style: {formData.learningStyle || "Not specified"}
-                    </p>
-                    <p className="text-gray-900">
-                      Communication: {formData.communicationPreference}
-                    </p>
-                    {formData.githubUsername && (
-                      <p className="text-gray-900">GitHub: {formData.githubUsername}</p>
-                    )}
-                  </div>
-                </div>
+                  <TabsContent value="preferences" className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-500">Learning & Communication</h4>
+                        <p className="text-gray-900">
+                          Learning Style: {formData.learningStyle || "Not specified"}
+                        </p>
+                        <p className="text-gray-900">
+                          Communication: {formData.communicationPreference || "Not specified"}
+                        </p>
+                        {formData.githubUsername && (
+                          <p className="text-gray-900">GitHub: {formData.githubUsername}</p>
+                        )}
+                      </div>
+                      
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-500">Platform Usage</h4>
+                        <p className="text-gray-900">
+                          Heard about us: {formData.referralSource || "Not specified"}
+                        </p>
+                        <p className="text-gray-900">
+                          Mentorship: {formData.mentorInterest || "Not specified"}
+                        </p>
+                        <p className="text-gray-900">
+                          Meetups: {formData.meetupInterest ? "Interested" : "Not interested"}
+                        </p>
+                      </div>
+                    </div>
+                  </TabsContent>
+                </Tabs>
               </div>
               
               <div className="flex items-start space-x-2">
@@ -657,3 +941,7 @@ export const RegistrationFlow = () => {
     </div>
   );
 };
+
+// Missing import
+import { Textarea } from "@/components/ui/textarea";
+import { Clock } from "lucide-react";
