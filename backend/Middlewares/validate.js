@@ -1,3 +1,4 @@
+
 import { body, validationResult } from 'express-validator';
 
 // Validation rules for registration
@@ -17,7 +18,7 @@ export const validateRegisterInput = [
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json({ success: false, errors: errors.array() });
         }
         next();
     }
@@ -30,7 +31,7 @@ export const validateLoginInput = [
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json({ success: false, errors: errors.array() });
         }
         next();
     }

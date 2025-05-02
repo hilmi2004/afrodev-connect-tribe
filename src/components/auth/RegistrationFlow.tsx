@@ -1,23 +1,26 @@
 
 import React, { useState } from "react";
-import { toast } from "sonner";
-
-// Import registration step components
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+import { ProgressBar } from "./registration/ProgressBar";
 import { StepBasicInfo } from "./registration/StepBasicInfo";
 import { StepDeveloperJourney } from "./registration/StepDeveloperJourney";
-import { StepLearningStyle } from "./registration/StepLearningStyle";
 import { StepTechInterests } from "./registration/StepTechInterests";
+import { StepLearningStyle } from "./registration/StepLearningStyle";
 import { StepConnectCollaborate } from "./registration/StepConnectCollaborate";
 import { StepDiscoveryReferral } from "./registration/StepDiscoveryReferral";
 import { StepWorkCollaboration } from "./registration/StepWorkCollaboration";
 import { StepFinalReview } from "./registration/StepFinalReview";
-import { ProgressBar } from "./registration/ProgressBar";
 import { NavigationButtons } from "./registration/NavigationButtons";
-
-// Import types
 import { RegistrationData } from "./registration/types";
+import { useAuth } from "@/hooks/useAuth";
 
-export const RegistrationFlow = () => {
+export const RegistrationFlow: React.FC = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const { register } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<RegistrationData>({
     fullName: "",
@@ -27,7 +30,7 @@ export const RegistrationFlow = () => {
     country: "",
     experience: "",
     programmingLanguages: [],
-    startYear: "",
+    startYear: new Date().getFullYear().toString(),
     learningStyle: "",
     interests: [],
     careerGoals: "",
@@ -41,170 +44,182 @@ export const RegistrationFlow = () => {
     meetupInterest: false,
     mentorInterest: "both",
     expectationsFromPlatform: "",
-    agreedToTerms: false,
+    agreedToTerms: false
   });
-  
-  const totalSteps = 8; 
-  
+
+  const totalSteps = 8;
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
-  
-  const handleCheckboxChange = (value: string, arrayName: keyof RegistrationData) => {
-    // For checkboxes in arrays (multiple selection)
-    setFormData(prev => {
-      const currentArray = prev[arrayName] as string[];
-      if (currentArray.includes(value)) {
-        return { 
-          ...prev, 
-          [arrayName]: currentArray.filter(item => item !== value) 
-        };
-      } else {
-        return { 
-          ...prev, 
-          [arrayName]: [...currentArray, value] 
-        };
-      }
-    });
-  };
-  
-  const handleBooleanChange = (checked: boolean, name: keyof RegistrationData) => {
-    setFormData(prev => ({ ...prev, [name]: checked }));
-  };
-  
+
   const handleSelectChange = (value: string, name: keyof RegistrationData) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
-  
-  const handleAgreedToTermsChange = (checked: boolean) => {
-    setFormData(prev => ({ ...prev, agreedToTerms: checked }));
+
+  const handleCheckboxChange = (value: string, arrayName: keyof RegistrationData) => {
+    const array = formData[arrayName] as string[];
+    const updatedArray = array.includes(value)
+      ? array.filter(item => item !== value)
+      : [...array, value];
+    setFormData(prev => ({ ...prev, [arrayName]: updatedArray }));
   };
 
-  const nextStep = () => {
-    if (step === 1) {
-      if (!formData.fullName || !formData.email || !formData.password || !formData.confirmPassword || !formData.country) {
-        toast.error("Please fill all fields in this step");
-        return;
-      }
-      
-      if (formData.password !== formData.confirmPassword) {
-        toast.error("Passwords do not match");
-        return;
-      }
+  const handleSingleCheckboxChange = (name: keyof RegistrationData, checked: boolean) => {
+    setFormData(prev => ({ ...prev, [name]: checked }));
+  };
+
+  const handlePrevious = () => {
+    if (step > 1) {
+      setStep(step - 1);
+      window.scrollTo(0, 0);
     }
-    
-    if (step === totalSteps) {
-      if (!formData.agreedToTerms) {
-        toast.error("Please agree to the terms and conditions");
-        return;
-      }
-      
-      console.log("Final registration data:", formData);
-      toast.success("Registration successful! Welcome to AfroDevConnect!");
+  };
+
+  const handleNext = () => {
+    if (step < totalSteps) {
+      setStep(step + 1);
+      window.scrollTo(0, 0);
+    } else {
+      handleSubmit();
+    }
+  };
+
+  const handleSubmit = async () => {
+    // Validate form data
+    if (formData.password !== formData.confirmPassword) {
+      toast({
+        title: "Password Error",
+        description: "Passwords do not match.",
+        variant: "destructive",
+      });
       return;
     }
+
+    if (!formData.agreedToTerms) {
+      toast({
+        title: "Terms Agreement Required",
+        description: "You must agree to the terms and conditions to register.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
     
-    setStep(step + 1);
-  };
-  
-  const prevStep = () => {
-    if (step === 1) return;
-    setStep(step - 1);
+    try {
+      // Remove confirmPassword before sending to backend
+      const { confirmPassword, ...registrationData } = formData;
+      
+      const success = await register(registrationData);
+      
+      if (success) {
+        toast({
+          title: "Registration Successful",
+          description: "Welcome to AfroDevConnect! You are now logged in.",
+          variant: "default",
+        });
+        navigate("/");
+      } else {
+        toast({
+          title: "Registration Failed",
+          description: "Please check your information and try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast({
+        title: "Registration Error",
+        description: "An unexpected error occurred. Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const renderStepContent = () => {
+  // Render the correct step
+  const renderStep = () => {
     switch (step) {
       case 1:
         return (
-          <StepBasicInfo 
-            formData={formData} 
-            handleInputChange={handleInputChange} 
-            handleSelectChange={handleSelectChange} 
+          <StepBasicInfo
+            formData={formData}
+            handleInputChange={handleInputChange}
+            handleSelectChange={handleSelectChange}
           />
         );
-        
       case 2:
         return (
-          <StepDeveloperJourney 
+          <StepDeveloperJourney
             formData={formData}
+            handleInputChange={handleInputChange}
             handleSelectChange={handleSelectChange}
             handleCheckboxChange={handleCheckboxChange}
           />
         );
-        
       case 3:
         return (
-          <StepLearningStyle 
+          <StepTechInterests
             formData={formData}
             handleSelectChange={handleSelectChange}
+            handleCheckboxChange={handleCheckboxChange}
           />
         );
-        
       case 4:
         return (
-          <StepTechInterests 
+          <StepLearningStyle
             formData={formData}
             handleSelectChange={handleSelectChange}
-            handleCheckboxChange={handleCheckboxChange}
           />
         );
-        
       case 5:
         return (
-          <StepConnectCollaborate 
+          <StepConnectCollaborate
             formData={formData}
             handleInputChange={handleInputChange}
             handleSelectChange={handleSelectChange}
           />
         );
-
       case 6:
         return (
-          <StepDiscoveryReferral 
+          <StepDiscoveryReferral
             formData={formData}
             handleSelectChange={handleSelectChange}
             handleCheckboxChange={handleCheckboxChange}
           />
         );
-
       case 7:
         return (
-          <StepWorkCollaboration 
+          <StepWorkCollaboration
             formData={formData}
             handleSelectChange={handleSelectChange}
-            handleBooleanChange={handleBooleanChange}
+            handleSingleCheckboxChange={handleSingleCheckboxChange}
           />
         );
-        
       case 8:
-        return (
-          <StepFinalReview 
-            formData={formData}
-            handleInputChange={handleInputChange}
-            handleAgreedToTermsChange={handleAgreedToTermsChange}
-          />
-        );
-        
+        return <StepFinalReview formData={formData} handleSingleCheckboxChange={handleSingleCheckboxChange} />;
       default:
         return null;
     }
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      <ProgressBar currentStep={step} totalSteps={totalSteps} />
+    <div className="space-y-6">
+      <ProgressBar step={step} totalSteps={totalSteps} />
       
-      {renderStepContent()}
-      
-      <div className="mt-8">
-        <NavigationButtons 
-          step={step} 
-          totalSteps={totalSteps} 
-          onPrevious={prevStep} 
-          onNext={nextStep} 
-        />
+      <div className="min-h-[400px]">
+        {renderStep()}
       </div>
+      
+      <NavigationButtons 
+        step={step} 
+        totalSteps={totalSteps} 
+        onPrevious={handlePrevious} 
+        onNext={isSubmitting ? () => {} : handleNext} 
+      />
     </div>
   );
 };

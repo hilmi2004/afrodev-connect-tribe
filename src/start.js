@@ -9,7 +9,7 @@ const client = spawn('npm', ['run', 'dev'], {
 });
 
 // Start the Node.js server
-const server = spawn('node', ['-r', 'ts-node/register', path.join(__dirname, 'server', 'server.ts')], {
+const server = spawn('node', ['backend/index.js'], {
   stdio: 'inherit',
   shell: true
 });

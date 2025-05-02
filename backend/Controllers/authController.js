@@ -1,3 +1,4 @@
+
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
@@ -6,7 +7,7 @@ import { validationResult } from 'express-validator';
 const generateToken = (userId) => {
     return jwt.sign(
         { userId },
-        process.env.JWT_SECRET,
+        process.env.JWT_SECRET || 'fallbacksecretfordevonly',
         { expiresIn: process.env.JWT_EXPIRE || '30d' }
     );
 };
@@ -17,7 +18,7 @@ const generateToken = (userId) => {
 export const registerUser = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({ success: false, errors: errors.array() });
     }
 
     try {
@@ -27,19 +28,33 @@ export const registerUser = async (req, res) => {
             password,
             country,
             experience,
+            programmingLanguages,
+            startYear,
+            learningStyle,
+            interests,
+            careerGoals,
+            communicationPreference,
+            githubUsername,
+            referralSource,
+            platformGoals,
+            preferredCommunication,
+            timeZone,
+            workStyle,
+            meetupInterest,
+            mentorInterest,
+            expectationsFromPlatform,
             agreedToTerms,
-            ...restData
         } = req.body;
 
         // Check if user exists
         const userExists = await User.findOne({ email });
         if (userExists) {
-            return res.status(400).json({ message: 'User already exists' });
+            return res.status(400).json({ success: false, message: 'User already exists' });
         }
 
         // Validate terms agreement
         if (!agreedToTerms) {
-            return res.status(400).json({ message: 'You must agree to the terms' });
+            return res.status(400).json({ success: false, message: 'You must agree to the terms' });
         }
 
         // Create user
@@ -49,24 +64,41 @@ export const registerUser = async (req, res) => {
             password,
             country,
             experience,
-            agreedToTerms,
-            ...restData
+            programmingLanguages: programmingLanguages || [],
+            startYear,
+            learningStyle,
+            interests: interests || [],
+            careerGoals,
+            communicationPreference,
+            githubUsername,
+            referralSource,
+            platformGoals: platformGoals || [],
+            preferredCommunication,
+            timeZone,
+            workStyle,
+            meetupInterest: meetupInterest || false,
+            mentorInterest,
+            expectationsFromPlatform,
+            agreedToTerms
         });
 
         // Generate token
         const token = generateToken(user._id);
 
         res.status(201).json({
-            _id: user._id,
-            fullName: user.fullName,
-            email: user.email,
-            profileImage: user.profileImage,
-            role: user.role,
+            success: true,
+            user: {
+                _id: user._id,
+                fullName: user.fullName,
+                email: user.email,
+                profileImage: user.profileImage,
+                role: user.role,
+            },
             token
         });
     } catch (error) {
         console.error('Registration error:', error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 };
 
@@ -80,29 +112,32 @@ export const loginUser = async (req, res) => {
         // Check for user
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
 
         // Check password
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
 
         // Generate token
         const token = generateToken(user._id);
 
         res.json({
-            _id: user._id,
-            fullName: user.fullName,
-            email: user.email,
-            profileImage: user.profileImage,
-            role: user.role,
+            success: true,
+            user: {
+                _id: user._id,
+                fullName: user.fullName,
+                email: user.email,
+                profileImage: user.profileImage,
+                role: user.role,
+            },
             token
         });
     } catch (error) {
         console.error('Login error:', error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 };
 
@@ -117,13 +152,16 @@ export const getMe = async (req, res) => {
             .populate('savedRoadmaps', 'title description');
 
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ success: false, message: 'User not found' });
         }
 
-        res.json(user);
+        res.json({
+            success: true,
+            user
+        });
     } catch (error) {
         console.error('Get profile error:', error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 };
 
@@ -137,19 +175,22 @@ export const updateUser = async (req, res) => {
 
         // Prevent role updates unless admin
         if (req.user.role !== 'admin' && updates.role) {
-            return res.status(403).json({ message: 'Not authorized to update role' });
+            return res.status(403).json({ success: false, message: 'Not authorized to update role' });
         }
 
         const user = await User.findByIdAndUpdate(req.user._id, updates, options)
             .select('-password');
 
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ success: false, message: 'User not found' });
         }
 
-        res.json(user);
+        res.json({
+            success: true,
+            user
+        });
     } catch (error) {
         console.error('Update error:', error);
-        res.status(500).json({ message: 'Server error' });
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 };

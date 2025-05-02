@@ -37,6 +37,7 @@ export interface IUser extends Document {
   joinedTribes: mongoose.Types.ObjectId[];
   createdRoadmaps: mongoose.Types.ObjectId[];
   savedRoadmaps: mongoose.Types.ObjectId[];
+  role: string;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -72,12 +73,13 @@ const UserSchema: Schema = new Schema({
   },
   joinedTribes: [{ type: Schema.Types.ObjectId, ref: 'Tribe' }],
   createdRoadmaps: [{ type: Schema.Types.ObjectId, ref: 'Roadmap' }],
-  savedRoadmaps: [{ type: Schema.Types.ObjectId, ref: 'Roadmap' }]
+  savedRoadmaps: [{ type: Schema.Types.ObjectId, ref: 'Roadmap' }],
+  role: { type: String, enum: ['user', 'moderator', 'admin'], default: 'user' }
 }, { timestamps: true });
 
 // Pre-save middleware to hash password
 UserSchema.pre('save', async function(next) {
-  const user = this as any;
+  const user = this as IUser;
   if (!user.isModified('password')) return next();
   
   try {
@@ -94,4 +96,7 @@ UserSchema.methods.comparePassword = async function(candidatePassword: string): 
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-export default mongoose.model<IUser>('User', UserSchema);
+// Only create the model if it doesn't exist (for client-side usage)
+const UserModel = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+
+export default UserModel;
