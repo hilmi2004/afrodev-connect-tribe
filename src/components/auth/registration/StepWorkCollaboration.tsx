@@ -10,13 +10,13 @@ import { RegistrationData, timeZones, workStyles } from "./types";
 interface StepWorkCollaborationProps {
   formData: RegistrationData;
   handleSelectChange: (value: string, name: keyof RegistrationData) => void;
-  handleBooleanChange: (checked: boolean, name: keyof RegistrationData) => void;
+  handleSingleCheckboxChange: (name: keyof RegistrationData, checked: boolean) => void;
 }
 
 export const StepWorkCollaboration: React.FC<StepWorkCollaborationProps> = ({
   formData,
   handleSelectChange,
-  handleBooleanChange
+  handleSingleCheckboxChange
 }) => {
   return (
     <MotionDiv
@@ -84,7 +84,7 @@ export const StepWorkCollaboration: React.FC<StepWorkCollaborationProps> = ({
               <Checkbox 
                 id="meetupInterest"
                 checked={formData.meetupInterest}
-                onCheckedChange={(checked) => handleBooleanChange(checked as boolean, 'meetupInterest')}
+                onCheckedChange={(checked) => handleSingleCheckboxChange('meetupInterest', checked as boolean)}
               />
               <Label htmlFor="meetupInterest">I'm interested in attending in-person tech meetups</Label>
             </div>

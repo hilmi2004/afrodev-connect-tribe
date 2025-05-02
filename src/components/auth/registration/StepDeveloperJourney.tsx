@@ -10,12 +10,14 @@ import { RegistrationData, experienceLevels, programmingLanguages } from "./type
 
 interface StepDeveloperJourneyProps {
   formData: RegistrationData;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleSelectChange: (value: string, name: keyof RegistrationData) => void;
   handleCheckboxChange: (value: string, arrayName: keyof RegistrationData) => void;
 }
 
 export const StepDeveloperJourney: React.FC<StepDeveloperJourneyProps> = ({
   formData,
+  handleInputChange,
   handleSelectChange,
   handleCheckboxChange
 }) => {

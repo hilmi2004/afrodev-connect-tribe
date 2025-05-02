@@ -2,18 +2,18 @@
 import React from "react";
 
 interface ProgressBarProps {
-  currentStep: number;
+  step: number;
   totalSteps: number;
 }
 
-export const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, totalSteps }) => {
-  const progress = (currentStep / totalSteps) * 100;
+export const ProgressBar: React.FC<ProgressBarProps> = ({ step, totalSteps }) => {
+  const progress = (step / totalSteps) * 100;
   
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between">
         <div className="text-sm font-medium text-gray-500">
-          Step {currentStep} of {totalSteps}
+          Step {step} of {totalSteps}
         </div>
         <div className="text-sm font-medium text-gray-500">
           {progress.toFixed(0)}% Complete
