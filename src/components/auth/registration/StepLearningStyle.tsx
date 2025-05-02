@@ -52,7 +52,7 @@ export const StepLearningStyle: React.FC<StepLearningStyleProps> = ({
         
         <div className="p-4 bg-afro-purple/5 rounded-xl border border-afro-purple/20">
           <p className="text-sm text-gray-600">
-            <strong>Did you know?</strong> Studies show that understanding your learning style can increase learning efficiency by up to 40%. At AfroDevConnect, we tailor content delivery based on your preferences!
+            <strong>Did you know?</strong> Studies show that understanding your learning style can increase learning efficiency by up to 40%. At BlackTech, we tailor content delivery based on your preferences!
           </p>
         </div>
       </div>

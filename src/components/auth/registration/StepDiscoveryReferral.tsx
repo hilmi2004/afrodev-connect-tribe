@@ -41,7 +41,7 @@ export const StepDiscoveryReferral: React.FC<StepDiscoveryReferralProps> = ({
         <div className="space-y-3">
           <Label className="flex items-center text-lg font-medium">
             <Info size={16} className="mr-2 text-afro-purple" />
-            How did you hear about AfroDevConnect?
+            How did you hear about bLactech?
           </Label>
           <RadioGroup 
             value={formData.referralSource} 
@@ -60,7 +60,7 @@ export const StepDiscoveryReferral: React.FC<StepDiscoveryReferralProps> = ({
         <div className="space-y-3">
           <Label className="flex items-center text-lg font-medium">
             <Star size={16} className="mr-2 text-afro-purple" />
-            What do you hope to gain from using AfroDevConnect?
+            What do you hope to gain from using BlackTECH?
           </Label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {platformGoals.map((goal) => (
