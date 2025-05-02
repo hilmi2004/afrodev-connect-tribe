@@ -37,6 +37,7 @@ export interface IUser extends Document {
   joinedTribes: mongoose.Types.ObjectId[];
   createdRoadmaps: mongoose.Types.ObjectId[];
   savedRoadmaps: mongoose.Types.ObjectId[];
+  comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
 const UserSchema: Schema = new Schema({
