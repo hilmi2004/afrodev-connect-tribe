@@ -79,7 +79,7 @@ const UserSchema: Schema = new Schema({
 
 // Pre-save middleware to hash password
 UserSchema.pre('save', async function(next) {
-  const user = this as any;
+  const user = this as IUser;
   if (!user.isModified('password')) return next();
   
   try {

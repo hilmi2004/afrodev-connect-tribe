@@ -21,8 +21,8 @@ export const registerUser = async (req: Request, res: Response) => {
     // Create new user
     const newUser = new User({
       fullName,
-      email,
       password, // Will be hashed by the pre-save middleware
+      email,
       country,
       experience,
       ...otherData
@@ -70,8 +70,8 @@ export const loginUser = async (req: Request, res: Response) => {
     }
     
     // Check password
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
       return res.status(401).json({ 
         success: false, 
         message: 'Invalid credentials' 
@@ -106,7 +106,6 @@ export const loginUser = async (req: Request, res: Response) => {
 
 export const getCurrentUser = async (req: Request, res: Response) => {
   try {
-    // @ts-ignore - user will be added by auth middleware
     const userId = req.user?.userId;
     
     if (!userId) {
