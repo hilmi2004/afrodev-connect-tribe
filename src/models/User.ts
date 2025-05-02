@@ -37,6 +37,7 @@ export interface IUser extends Document {
   joinedTribes: mongoose.Types.ObjectId[];
   createdRoadmaps: mongoose.Types.ObjectId[];
   savedRoadmaps: mongoose.Types.ObjectId[];
+  role: string;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -72,7 +73,8 @@ const UserSchema: Schema = new Schema({
   },
   joinedTribes: [{ type: Schema.Types.ObjectId, ref: 'Tribe' }],
   createdRoadmaps: [{ type: Schema.Types.ObjectId, ref: 'Roadmap' }],
-  savedRoadmaps: [{ type: Schema.Types.ObjectId, ref: 'Roadmap' }]
+  savedRoadmaps: [{ type: Schema.Types.ObjectId, ref: 'Roadmap' }],
+  role: { type: String, enum: ['user', 'moderator', 'admin'], default: 'user' }
 }, { timestamps: true });
 
 // Pre-save middleware to hash password
