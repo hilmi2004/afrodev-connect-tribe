@@ -96,7 +96,9 @@ UserSchema.methods.comparePassword = async function(candidatePassword: string): 
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-// Only create the model if it doesn't exist (for client-side usage)
-const UserModel = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+// Fix for TypeScript error - ensure the model is properly typed
+const UserModel = mongoose.models.User 
+  ? mongoose.model<IUser>('User') 
+  : mongoose.model<IUser>('User', UserSchema);
 
 export default UserModel;

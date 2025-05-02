@@ -7,18 +7,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MessageSquare } from "lucide-react";
 import { MotionDiv, fadeIn } from "@/components/ui/motion";
 import { RegistrationData } from "./types";
-
-interface StepFinalReviewProps {
-  formData: RegistrationData;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  handleAgreedToTermsChange: (checked: boolean) => void;
-}
+import { StepFinalReviewProps } from "./StepFinalReviewProps";
 
 export const StepFinalReview: React.FC<StepFinalReviewProps> = ({
   formData,
-  handleInputChange,
-  handleAgreedToTermsChange
+  handleSingleCheckboxChange
 }) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    // For the expectationsFromPlatform field
+    if (name === "expectationsFromPlatform" && handleSingleCheckboxChange) {
+      handleSingleCheckboxChange("expectationsFromPlatform" as keyof RegistrationData, value as unknown as boolean);
+    }
+  };
+
   return (
     <MotionDiv
       initial="hidden"
@@ -140,7 +142,7 @@ export const StepFinalReview: React.FC<StepFinalReviewProps> = ({
           <Checkbox 
             id="terms" 
             checked={formData.agreedToTerms}
-            onCheckedChange={(checked) => handleAgreedToTermsChange(checked as boolean)}
+            onCheckedChange={(checked) => handleSingleCheckboxChange("agreedToTerms", checked as boolean)}
           />
           <div className="grid gap-1.5 leading-none">
             <Label
