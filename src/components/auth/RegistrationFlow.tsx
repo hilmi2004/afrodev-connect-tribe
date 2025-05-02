@@ -1,8 +1,6 @@
 
 import React, { useState } from "react";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
 
 // Import registration step components
 import { StepBasicInfo } from "./registration/StepBasicInfo";
@@ -21,10 +19,6 @@ import { RegistrationData } from "./registration/types";
 
 export const RegistrationFlow = () => {
   const [step, setStep] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { register } = useAuth();
-  const navigate = useNavigate();
-  
   const [formData, setFormData] = useState<RegistrationData>({
     fullName: "",
     email: "",
@@ -87,29 +81,6 @@ export const RegistrationFlow = () => {
     setFormData(prev => ({ ...prev, agreedToTerms: checked }));
   };
 
-  const submitRegistration = async () => {
-    setIsSubmitting(true);
-    
-    try {
-      // Remove confirmPassword as it's not needed for the API
-      const { confirmPassword, ...registrationData } = formData;
-      
-      const success = await register(registrationData);
-      
-      if (success) {
-        toast.success("Registration successful! Welcome to AfroDevConnect!");
-        navigate('/');
-      } else {
-        toast.error("Registration failed. Please check your information and try again.");
-      }
-    } catch (error) {
-      console.error("Registration error:", error);
-      toast.error("An unexpected error occurred. Please try again later.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   const nextStep = () => {
     if (step === 1) {
       if (!formData.fullName || !formData.email || !formData.password || !formData.confirmPassword || !formData.country) {
@@ -129,7 +100,8 @@ export const RegistrationFlow = () => {
         return;
       }
       
-      submitRegistration();
+      console.log("Final registration data:", formData);
+      toast.success("Registration successful! Welcome to AfroDevConnect!");
       return;
     }
     
@@ -231,7 +203,6 @@ export const RegistrationFlow = () => {
           totalSteps={totalSteps} 
           onPrevious={prevStep} 
           onNext={nextStep} 
-          isSubmitting={isSubmitting}
         />
       </div>
     </div>
