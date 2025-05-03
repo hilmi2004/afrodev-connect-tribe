@@ -33,7 +33,7 @@ export const MainNav = () => {
   const location = useLocation();
 
   return (
-    <nav className="flex items-center gap-3 lg:gap-5">
+    <nav className="flex items-center flex-col md:flex-row gap-3 md:gap-8">
       <NavLink to="/" active={location.pathname === "/"}>
         Home
       </NavLink>
@@ -45,7 +45,6 @@ export const MainNav = () => {
       <NavDropdown
         trigger={
           <span className="flex items-center gap-1 font-medium text-gray-700 hover:text-gray-900">
-            <LayoutGrid className="mr-1" size={18} />
             Projects
           </span>
         }
@@ -66,7 +65,6 @@ export const MainNav = () => {
       <NavDropdown
         trigger={
           <span className="flex items-center gap-1 font-medium text-gray-700 hover:text-gray-900">
-            <UsersRound className="mr-1" size={18} />
             Tribes
           </span>
         }
@@ -82,7 +80,6 @@ export const MainNav = () => {
       <NavDropdown
         trigger={
           <span className="flex items-center gap-1 font-medium text-gray-700 hover:text-gray-900">
-            <BookOpen className="mr-1" size={18} />
             Resources
           </span>
         }
@@ -99,23 +96,6 @@ export const MainNav = () => {
       <NavDropdown
         trigger={
           <span className="flex items-center gap-1 font-medium text-gray-700 hover:text-gray-900">
-            <Users className="mr-1" size={18} />
-            Community
-          </span>
-        }
-        image={navImages.community}
-        imageAlt="Local connect and forums"
-        items={[
-          { label: "Local Connect", href: "/localconnect", icon: <Globe size={16} /> },
-          { label: "Forums", href: "/forum", icon: <Users size={16} /> },
-        ]}
-        visualLabel="Community"
-      />
-
-      <NavDropdown
-        trigger={
-          <span className="flex items-center gap-1 font-medium text-gray-700 hover:text-gray-900">
-            <Calendar className="mr-1" size={18} />
             Events
           </span>
         }
@@ -127,23 +107,6 @@ export const MainNav = () => {
           { label: "Webinars", href: "/webinar", icon: <Calendar size={16} /> },
         ]}
         visualLabel="Events"
-      />
-
-      <NavDropdown
-        trigger={
-          <span className="flex items-center gap-1 font-medium text-gray-700 hover:text-gray-900">
-            <User className="mr-1" size={18} />
-            Profile
-          </span>
-        }
-        image={navImages.profile}
-        imageAlt="User profile"
-        items={[
-          { label: "View Profile", href: "/profileview", icon: <User size={16} /> },
-          { label: "Edit Profile", href: "/profileedit", icon: <User size={16} /> },
-          { label: "Dev Journey", href: "/profile/journey", icon: <BookOpen size={16} /> },
-        ]}
-        visualLabel="My Profile"
       />
     </nav>
   );
