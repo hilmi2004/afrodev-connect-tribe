@@ -138,8 +138,8 @@ export const MainNav = () => {
         image={navImages.profile}
         imageAlt="User profile"
         items={[
-          { label: "View Profile", href: "/profile", icon: <User size={17} /> },
-          { label: "Edit Profile", href: "/profile/edit", icon: <User size={17} /> },
+          { label: "View Profile", href: "/profileview", icon: <User size={17} /> },
+          { label: "Edit Profile", href: "/profileedit", icon: <User size={17} /> },
           { label: "Dev Journey", href: "/profile/journey", icon: <BookOpen size={17} /> },
         ]}
         visualLabel="My Profile"

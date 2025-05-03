@@ -68,12 +68,14 @@ export function Features() {
       });
 
       // Swaying icon animation
-      gsap.to(".feature-icon", {
-        rotation: 5,
-        yoyo: true,
-        repeat: -1,
-        duration: 2,
-        ease: "sine.inOut",
+      gsap.utils.toArray(".feature-icon").forEach((icon: any) => {
+        gsap.to(icon, {
+          rotation: 5,
+          yoyo: true,
+          repeat: -1,
+          duration: 2,
+          ease: "sine.inOut",
+        });
       });
 
       // Drum sound on scroll

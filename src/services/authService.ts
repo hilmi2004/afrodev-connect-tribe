@@ -1,96 +1,116 @@
-
-interface AuthResponse {
-  success: boolean;
-  user?: any;
-  token?: string;
-  message?: string;
-}
-
 const API_URL = 'http://localhost:5000/api';
 
 export const authService = {
-  // Register a new user
-  async register(userData: any): Promise<AuthResponse> {
+  /**
+   * Register a new user
+   * @param {object} userData - User registration data
+   * @returns {Promise<{success: boolean, user?: object, token?: string, message?: string, errors?: array}>}
+   */
+  async register(userData) {
     try {
+      // Ensure required fields are present
+      const payload = {
+        fullName: userData.fullName,
+        email: userData.email,
+        password: userData.password,
+        country: userData.country,
+        experience: userData.experience,
+        agreedToTerms: true, // Must be true
+        ...userData // Include any additional fields
+      };
+
       const response = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(userData),
+        credentials: 'include',
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
-      
-      if (data.success) {
-        localStorage.setItem('user', JSON.stringify(data.user));
-        localStorage.setItem('token', data.token);
+
+      if (!response.ok) {
         return {
-          success: true,
-          user: data.user,
-          token: data.token,
+          success: false,
+          message: data.message || 'Registration failed',
+          errors: data.errors || []
         };
       }
-      
+
+      // Save user data and token if registration successful
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+      }
+
       return {
-        success: false,
-        message: data.message || 'Registration failed',
+        success: true,
+        user: data.user,
+        token: data.token
       };
     } catch (error) {
       console.error('Registration error:', error);
       return {
         success: false,
-        message: 'Network error, please try again',
+        message: error.message || 'Network error during registration'
       };
     }
   },
 
-  // Login user
-  async login(email: string, password: string): Promise<AuthResponse> {
+  /**
+   * Login user
+   * @param {string} email
+   * @param {string} password
+   * @returns {Promise<{success: boolean, user?: object, token?: string, message?: string}>}
+   */
+  async login(email, password) {
     try {
       const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
-      
-      if (data.success) {
-        localStorage.setItem('user', JSON.stringify(data.user));
-        localStorage.setItem('token', data.token);
+
+      if (!response.ok) {
         return {
-          success: true,
-          user: data.user,
-          token: data.token,
+          success: false,
+          message: data.message || 'Login failed'
         };
       }
-      
+
+      // Save user data and token
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
       return {
-        success: false,
-        message: data.message || 'Invalid credentials',
+        success: true,
+        user: data.user,
+        token: data.token
       };
     } catch (error) {
       console.error('Login error:', error);
       return {
         success: false,
-        message: 'Network error, please try again',
+        message: 'Network error during login'
       };
     }
   },
 
-  // Get current user
-  async getCurrentUser(): Promise<AuthResponse> {
+  /**
+   * Get current authenticated user
+   * @returns {Promise<{success: boolean, user?: object, message?: string}>}
+   */
+  async getCurrentUser() {
     try {
       const token = localStorage.getItem('token');
-      
       if (!token) {
-        return {
-          success: false,
-          message: 'No authentication token',
-        };
+        return { success: false, message: 'No authentication token' };
       }
 
       const response = await fetch(`${API_URL}/auth/me`, {
@@ -99,43 +119,45 @@ export const authService = {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
       });
 
       const data = await response.json();
-      
-      if (data.success) {
-        localStorage.setItem('user', JSON.stringify(data.user));
+
+      if (!response.ok) {
+        this.logout();
         return {
-          success: true,
-          user: data.user,
+          success: false,
+          message: data.message || 'Session expired'
         };
       }
-      
-      // Token invalid, logout
-      this.logout();
+
+      // Update stored user data
+      localStorage.setItem('user', JSON.stringify(data.user));
+
       return {
-        success: false,
-        message: data.message || 'Session expired',
+        success: true,
+        user: data.user
       };
     } catch (error) {
       console.error('Get current user error:', error);
       return {
         success: false,
-        message: 'Network error, please try again',
+        message: 'Network error fetching user data'
       };
     }
   },
 
-  // Update user profile
-  async updateProfile(userData: any): Promise<AuthResponse> {
+  /**
+   * Update user profile
+   * @param {object} userData - Updated user data
+   * @returns {Promise<{success: boolean, user?: object, message?: string}>}
+   */
+  async updateProfile(userData) {
     try {
       const token = localStorage.getItem('token');
-      
       if (!token) {
-        return {
-          success: false,
-          message: 'No authentication token',
-        };
+        return { success: false, message: 'No authentication token' };
       }
 
       const response = await fetch(`${API_URL}/auth/update`, {
@@ -144,45 +166,56 @@ export const authService = {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(userData),
       });
 
       const data = await response.json();
-      
-      if (data.success) {
-        localStorage.setItem('user', JSON.stringify(data.user));
+
+      if (!response.ok) {
         return {
-          success: true,
-          user: data.user,
+          success: false,
+          message: data.message || 'Update failed'
         };
       }
-      
+
+      // Update stored user data
+      localStorage.setItem('user', JSON.stringify(data.user));
+
       return {
-        success: false,
-        message: data.message || 'Update failed',
+        success: true,
+        user: data.user
       };
     } catch (error) {
       console.error('Update profile error:', error);
       return {
         success: false,
-        message: 'Network error, please try again',
+        message: 'Network error during update'
       };
     }
   },
 
-  // Check if user is logged in
-  isLoggedIn(): boolean {
+  /**
+   * Check if user is authenticated
+   * @returns {boolean}
+   */
+  isLoggedIn() {
     return !!localStorage.getItem('token');
   },
 
-  // Logout user
-  logout(): void {
-    localStorage.removeItem('user');
+  /**
+   * Logout user
+   */
+  logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
   },
 
-  // Get auth token
-  getToken(): string | null {
+  /**
+   * Get authentication token
+   * @returns {string|null}
+   */
+  getToken() {
     return localStorage.getItem('token');
   }
 };
