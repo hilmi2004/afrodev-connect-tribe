@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -24,8 +25,8 @@ import DevProfile from "@/pages/DevProfile";
 import LocalConnect from "@/pages/LocalConnect";
 import CareerAdvice from "@/pages/CareerAdvice";
 import TribeDetail from "@/pages/TribeDetail";
-import ProfileView from "@/pages/ProfileView.tsx";
-import ProfileEdit from "@/pages/ProfileEdit.tsx";
+import ProfileView from "@/pages/ProfileView";
+import ProfileEdit from "@/pages/ProfileEdit";
 
 const queryClient = new QueryClient();
 
@@ -58,11 +59,8 @@ const App = () => {
                 <Route path="/careeradvice" element={<CareerAdvice />} />
                 <Route path="/meetups" element={<Meetups />} />
                 <Route path="/dev-tools" element={<DevTools />} />
-                <Route path="/profileview" element={<ProfileView/>} />
-                <Route path="/profileedit" element={<ProfileEdit/>} />
-
-
-
+                <Route path="/profile" element={<ProfileView />} />
+                <Route path="/profile/edit" element={<ProfileEdit />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
