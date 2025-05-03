@@ -97,6 +97,6 @@ UserSchema.methods.comparePassword = async function(candidatePassword: string): 
 };
 
 // Fix the type issue by properly defining the model with correct type assertions
-const UserModel = mongoose.models.User as Model<IUser> || mongoose.model<IUser>('User', UserSchema);
+const UserModel: Model<IUser> = (mongoose.models.User as Model<IUser>) || mongoose.model<IUser>('User', UserSchema);
 
 export default UserModel;
