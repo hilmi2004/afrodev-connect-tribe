@@ -96,9 +96,9 @@ UserSchema.methods.comparePassword = async function(candidatePassword: string): 
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-// Fix the TypeScript error by ensuring proper type conversion
+// Fix the TypeScript error by updating model creation and ensuring proper type conversion
 const UserModel = mongoose.models.User 
-  ? mongoose.model<IUser>('User') as mongoose.Model<IUser>
+  ? (mongoose.models.User as mongoose.Model<IUser>)
   : mongoose.model<IUser>('User', UserSchema);
 
 export default UserModel;
