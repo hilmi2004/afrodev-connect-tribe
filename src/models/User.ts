@@ -1,5 +1,5 @@
 
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 export interface IUser extends Document {
@@ -96,9 +96,7 @@ UserSchema.methods.comparePassword = async function(candidatePassword: string): 
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-// Fix the TypeScript error by updating model creation and ensuring proper type conversion
-const UserModel = mongoose.models.User 
-  ? (mongoose.models.User as mongoose.Model<IUser>)
-  : mongoose.model<IUser>('User', UserSchema);
+// Fix the type issue by properly defining the model with correct type assertions
+const UserModel = mongoose.models.User as Model<IUser> || mongoose.model<IUser>('User', UserSchema);
 
 export default UserModel;
