@@ -1,3 +1,4 @@
+
 import { useLocation } from "react-router-dom";
 import { NavLink } from "./NavLink";
 import { NavDropdown } from "../NavDropdown";
@@ -32,7 +33,7 @@ export const MainNav = () => {
   const location = useLocation();
 
   return (
-    <nav className="hidden md:flex items-center gap-5 lg:gap-7 xl:gap-9 px-2 py-1">
+    <nav className="flex items-center gap-3 lg:gap-5">
       <NavLink to="/" active={location.pathname === "/"}>
         Home
       </NavLink>
@@ -43,20 +44,20 @@ export const MainNav = () => {
 
       <NavDropdown
         trigger={
-          <span className="flex items-center gap-1 font-medium">
-            <LayoutGrid className="mr-2" size={20} />
-            Explore Projects
+          <span className="flex items-center gap-1 font-medium text-gray-700 hover:text-gray-900">
+            <LayoutGrid className="mr-1" size={18} />
+            Projects
           </span>
         }
         image={navImages.projects}
         imageAlt="Explore African tech projects"
         items={[
-          { label: "By Country", icon: <Globe size={17} />, href: "#" },
-          { label: "By Tech Stack", icon: <Layers size={17} />, href: "#" },
+          { label: "By Country", icon: <Globe size={16} />, href: "#" },
+          { label: "By Tech Stack", icon: <Layers size={16} />, href: "#" },
           ...featuredProjects.map((p) => ({
             label: p.label,
             href: p.href,
-            icon: <LayoutGrid size={17} />,
+            icon: <LayoutGrid size={16} />,
           })),
         ]}
         visualLabel="Explore Projects"
@@ -64,15 +65,15 @@ export const MainNav = () => {
 
       <NavDropdown
         trigger={
-          <span className="flex items-center gap-1 font-medium">
-            <UsersRound className="mr-2" size={20} />
+          <span className="flex items-center gap-1 font-medium text-gray-700 hover:text-gray-900">
+            <UsersRound className="mr-1" size={18} />
             Tribes
           </span>
         }
         image={navImages.tribes}
         imageAlt="Tribes collaboration"
         items={[
-          { label: "Find Tribes", icon: <Search size={17} />, href: "/tribes" },
+          { label: "Find Tribes", icon: <Search size={16} />, href: "/tribes" },
           { label: "Create a Tribe", isCTA: true, href: "/tribes/create" },
         ]}
         visualLabel="Tribes"
@@ -80,67 +81,67 @@ export const MainNav = () => {
 
       <NavDropdown
         trigger={
-          <span className="flex items-center gap-1 font-medium">
-            <BookOpen className="mr-2" size={20} />
+          <span className="flex items-center gap-1 font-medium text-gray-700 hover:text-gray-900">
+            <BookOpen className="mr-1" size={18} />
             Resources
           </span>
         }
         image={navImages.resources}
         imageAlt="Resources and learning"
         items={[
-          { label: "Tech News", href: "/technews", icon: <BookOpen size={17} /> },
-          { label: "Dev Tools & Tutorials", href: "/dev-tools", icon: <BookOpen size={17} /> },
-          { label: "Career Advice", href: "/careeradvice", icon: <BookOpen size={17} /> },
+          { label: "Tech News", href: "/technews", icon: <BookOpen size={16} /> },
+          { label: "Dev Tools & Tutorials", href: "/dev-tools", icon: <BookOpen size={16} /> },
+          { label: "Career Advice", href: "/careeradvice", icon: <BookOpen size={16} /> },
         ]}
         visualLabel="Resources"
       />
 
       <NavDropdown
         trigger={
-          <span className="flex items-center gap-1 font-medium">
-            <Users className="mr-2" size={20} />
+          <span className="flex items-center gap-1 font-medium text-gray-700 hover:text-gray-900">
+            <Users className="mr-1" size={18} />
             Community
           </span>
         }
         image={navImages.community}
         imageAlt="Local connect and forums"
         items={[
-          { label: "Local Connect", href: "/localconnect", icon: <Globe size={17} /> },
-          { label: "Forums", href: "/forum", icon: <Users size={17} /> },
+          { label: "Local Connect", href: "/localconnect", icon: <Globe size={16} /> },
+          { label: "Forums", href: "/forum", icon: <Users size={16} /> },
         ]}
         visualLabel="Community"
       />
 
       <NavDropdown
         trigger={
-          <span className="flex items-center gap-1 font-medium">
-            <Calendar className="mr-2" size={20} />
+          <span className="flex items-center gap-1 font-medium text-gray-700 hover:text-gray-900">
+            <Calendar className="mr-1" size={18} />
             Events
           </span>
         }
         image={navImages.events}
         imageAlt="Events and hackathons"
         items={[
-          { label: "Upcoming Hackathons", href: "/hackathon", icon: <Calendar size={17} /> },
-          { label: "Dev Meetups", href: "/meetups", icon: <Calendar size={17} /> },
-          { label: "Webinars", href: "/webinar", icon: <Calendar size={17} /> },
+          { label: "Upcoming Hackathons", href: "/hackathon", icon: <Calendar size={16} /> },
+          { label: "Dev Meetups", href: "/meetups", icon: <Calendar size={16} /> },
+          { label: "Webinars", href: "/webinar", icon: <Calendar size={16} /> },
         ]}
         visualLabel="Events"
       />
 
       <NavDropdown
         trigger={
-          <span className="flex items-center gap-1 font-medium">
-            <User className="mr-2" size={20} />
-            My Profile
+          <span className="flex items-center gap-1 font-medium text-gray-700 hover:text-gray-900">
+            <User className="mr-1" size={18} />
+            Profile
           </span>
         }
         image={navImages.profile}
         imageAlt="User profile"
         items={[
-          { label: "View Profile", href: "/profileview", icon: <User size={17} /> },
-          { label: "Edit Profile", href: "/profileedit", icon: <User size={17} /> },
-          { label: "Dev Journey", href: "/profile/journey", icon: <BookOpen size={17} /> },
+          { label: "View Profile", href: "/profileview", icon: <User size={16} /> },
+          { label: "Edit Profile", href: "/profileedit", icon: <User size={16} /> },
+          { label: "Dev Journey", href: "/profile/journey", icon: <BookOpen size={16} /> },
         ]}
         visualLabel="My Profile"
       />

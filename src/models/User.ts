@@ -96,7 +96,7 @@ UserSchema.methods.comparePassword = async function(candidatePassword: string): 
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-// Fix the type issue by properly defining the model with correct type assertions
-const UserModel: Model<IUser> = (mongoose.models.User as Model<IUser>) || mongoose.model<IUser>('User', UserSchema);
+// Fix the type issue by explicitly casting the model
+const UserModel = (mongoose.models.User || mongoose.model('User', UserSchema)) as Model<IUser>;
 
 export default UserModel;

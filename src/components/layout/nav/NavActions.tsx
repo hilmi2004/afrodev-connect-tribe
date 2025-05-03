@@ -8,13 +8,13 @@ export const NavActions = () => (
     <Button
       variant="ghost"
       size="icon"
-      className="hidden sm:inline-flex hover:bg-afro-purple/10"
+      className="text-gray-600 hover:text-gray-900 hover:bg-gray-100"
       aria-label="Search"
     >
       <Search className="h-5 w-5" />
     </Button>
     <Link to="/login">
-      <Button variant="outline" className="hidden md:inline-flex">
+      <Button variant="outline" className="hidden md:inline-flex border-gray-300 text-gray-700 hover:bg-gray-50">
         Sign In
       </Button>
     </Link>
