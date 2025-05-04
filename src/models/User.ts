@@ -47,15 +47,12 @@ export interface IUser {
   }[];
 }
 
-// This represents the MongoDB document
-interface IUserDocument extends IUser, Document {}
-
 // This type is for the model with static methods
-interface IUserModel extends Model<IUserDocument> {
+interface IUserModel extends Model<IUser & Document> {
   // Add any static methods here if needed
 }
 
 // Create your User model and cast it to your interface
-const UserModel = mongoose.model<IUserDocument, IUserModel>('User') as unknown as Model<IUser>;
+const UserModel = mongoose.model<IUser & Document, IUserModel>('User');
 
 export { UserModel };

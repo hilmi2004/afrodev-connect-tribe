@@ -19,7 +19,8 @@ import {
   Star,
   Award,
   Heart,
-  Clock
+  Clock,
+  UserRound
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -33,6 +34,7 @@ import {
   staggerContainer 
 } from "@/components/ui/motion";
 import { useAuth } from "@/hooks/useAuth";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 // Mock user data - in production this would come from the API
 const USER_PROFILE = {
@@ -191,11 +193,24 @@ export default function ProfileView() {
             {/* Profile Image */}
             <div className="absolute -bottom-16 left-8 md:left-12">
               <div className="relative">
-                <img
-                  src={USER_PROFILE.avatar}
-                  alt={USER_PROFILE.name}
-                  className="w-32 h-32 rounded-full border-4 border-white shadow-xl"
-                />
+                <Avatar className="w-32 h-32 rounded-full border-4 border-white shadow-xl">
+                  {user?.profileImage ? (
+                    <AvatarImage 
+                      src={user.profileImage} 
+                      alt={user.fullName || "User"} 
+                      className="object-cover"
+                    />
+                  ) : (
+                    <AvatarImage 
+                      src={USER_PROFILE.avatar} 
+                      alt={USER_PROFILE.name} 
+                      className="object-cover"
+                    />
+                  )}
+                  <AvatarFallback className="bg-gray-200 text-gray-500">
+                    <UserRound size={48} />
+                  </AvatarFallback>
+                </Avatar>
                 <div className="absolute -bottom-1 -right-1 bg-green-500 w-6 h-6 rounded-full border-2 border-white"></div>
               </div>
             </div>

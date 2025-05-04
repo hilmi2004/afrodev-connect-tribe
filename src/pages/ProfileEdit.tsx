@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { 
   Tabs, 
@@ -16,7 +15,8 @@ import { ProjectForm } from "@/components/profile/ProjectForm";
 import { ArticleForm } from "@/components/profile/ArticleForm";
 import { TimelineEventForm } from "@/components/profile/TimelineEventForm";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Trash } from "lucide-react";
+import { Plus, Trash, Camera, Image, UserRound } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export default function ProfileEdit() {
   // For demo, use local state only
@@ -24,12 +24,14 @@ export default function ProfileEdit() {
   const [saving, setSaving] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Basic profile info
   const [name, setName] = useState(user?.fullName || "");
   const [email, setEmail] = useState(user?.email || "");
   const [location, setLocation] = useState(user?.country || "");
   const [bio, setBio] = useState(user?.bio || "");
+  const [profileImage, setProfileImage] = useState(user?.profileImage || "");
   
   // Social links
   const [github, setGithub] = useState(user?.socialLinks?.github || "");
@@ -99,6 +101,26 @@ export default function ProfileEdit() {
     setEducations(updatedEducations);
   };
 
+  // Handle profile image upload
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // In a real application, you would upload this file to your server/storage
+      // For now, we'll use a local URL
+      const imageUrl = URL.createObjectURL(file);
+      setProfileImage(imageUrl);
+      
+      toast({
+        title: "Image uploaded",
+        description: "Your profile image has been updated.",
+      });
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
   function handleSaveProfile(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
@@ -128,6 +150,57 @@ export default function ProfileEdit() {
           </TabsList>
           
           <TabsContent value="general" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Profile Photo</CardTitle>
+                <CardDescription>Upload a profile picture to personalize your account</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-6">
+                  <div className="relative">
+                    <Avatar className="h-24 w-24 border-2 border-gray-200">
+                      {profileImage ? (
+                        <AvatarImage src={profileImage} alt={name} />
+                      ) : (
+                        <AvatarFallback className="bg-gray-100 text-gray-400">
+                          <UserRound size={32} />
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
+                    <Button 
+                      size="icon"
+                      variant="secondary" 
+                      className="absolute -bottom-2 -right-2 rounded-full h-8 w-8 shadow-md hover:bg-afro-purple hover:text-white transition-colors"
+                      onClick={triggerFileInput}
+                    >
+                      <Camera size={16} />
+                    </Button>
+                  </div>
+                  <div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      ref={fileInputRef}
+                      onChange={handleImageUpload}
+                    />
+                    <Button 
+                      type="button" 
+                      variant="outline"
+                      className="flex gap-2 items-center"
+                      onClick={triggerFileInput}
+                    >
+                      <Image size={16} />
+                      Upload Image
+                    </Button>
+                    <p className="text-sm text-gray-500 mt-2">
+                      Recommended: Square image, at least 400x400 pixels
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             <Card>
               <CardHeader>
                 <CardTitle>Basic Information</CardTitle>

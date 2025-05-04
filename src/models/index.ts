@@ -1,5 +1,5 @@
 
-import User from './User';
+import { UserModel } from './User';
 import Roadmap from './Roadmap';
 import Tribe from './Tribe';
 import Message from './Message';
@@ -9,7 +9,7 @@ import Project from './Project';
 import Comment from './Comment';
 
 export {
-  User,
+  UserModel,
   Roadmap,
   Tribe,
   Message,
