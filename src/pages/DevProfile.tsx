@@ -1,8 +1,9 @@
-
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { CommentSection } from "@/components/comments/CommentSection";
 import { 
   Github, 
   Globe, 
@@ -85,7 +86,7 @@ const DEV_PROFILE = {
       id: "p1",
       title: "AfroCommerce",
       description: "An e-commerce platform tailored for African artisans to sell globally",
-      image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1170&auto=format&fit=crop",
+      image: "https://images.unsplash.com/photo-1483985988355-2afd69097998?q=80&w=1170&auto=format&fit=crop",
       techStack: ["React", "Node.js", "MongoDB", "Stripe API"],
       stars: 128,
       link: "#"
@@ -188,6 +189,55 @@ const DEV_PROFILE = {
   }
 };
 
+// Mock comments for demo
+const MOCK_COMMENTS = [
+  {
+    _id: "comment1",
+    content: "Great profile! Would love to collaborate on a project sometime.",
+    author: {
+      _id: "user4",
+      fullName: "Fatou Diallo",
+      profileImage: "https://randomuser.me/api/portraits/women/21.jpg"
+    },
+    createdAt: new Date("2023-11-10"),
+    updatedAt: new Date("2023-11-10"),
+    isEdited: false,
+    likes: 8,
+    likedByCurrentUser: false,
+    replies: []
+  },
+  {
+    _id: "comment2",
+    content: "Your AfroCommerce project looks interesting! What kind of payment processors are you using?",
+    author: {
+      _id: "user5",
+      fullName: "Kwame Adetokunbo",
+      profileImage: "https://randomuser.me/api/portraits/men/52.jpg"
+    },
+    createdAt: new Date("2023-11-18"),
+    updatedAt: new Date("2023-11-18"),
+    isEdited: false,
+    likes: 3,
+    likedByCurrentUser: false,
+    replies: [
+      {
+        _id: "reply1",
+        content: "Thanks! We're using a combination of Flutterwave and Paystack for different regions.",
+        author: {
+          _id: "1",
+          fullName: "Chioma Okonkwo",
+          profileImage: "https://randomuser.me/api/portraits/women/31.jpg"
+        },
+        createdAt: new Date("2023-11-19"),
+        updatedAt: new Date("2023-11-19"),
+        isEdited: false,
+        likes: 2,
+        likedByCurrentUser: true
+      }
+    ]
+  }
+];
+
 // Function to get icon for timeline
 const getTimelineIcon = (type: string) => {
   switch (type) {
@@ -208,6 +258,140 @@ const getTimelineIcon = (type: string) => {
 
 const DevProfile = () => {
   const [activeTab, setActiveTab] = useState("projects");
+  const [commentDialog, setCommentDialog] = useState(false);
+  const [comments, setComments] = useState(MOCK_COMMENTS);
+  
+  // Comment handlers
+  const handleAddComment = async (content: string, parentId?: string) => {
+    const newComment = {
+      _id: `comment${Math.random().toString(36).substr(2, 9)}`,
+      content,
+      author: {
+        _id: "currentUser",
+        fullName: "Current User",
+        profileImage: "https://randomuser.me/api/portraits/women/65.jpg"
+      },
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      isEdited: false,
+      likes: 0,
+      likedByCurrentUser: false,
+      replies: []
+    };
+    
+    if (parentId) {
+      // Add as reply
+      const updatedComments = comments.map(comment => {
+        if (comment._id === parentId) {
+          return {
+            ...comment,
+            replies: [...(comment.replies || []), newComment]
+          };
+        }
+        return comment;
+      });
+      setComments(updatedComments);
+    } else {
+      // Add as new comment
+      setComments([newComment, ...comments]);
+    }
+    
+    return Promise.resolve();
+  };
+  
+  const handleEditComment = async (commentId: string, content: string) => {
+    const updatedComments = comments.map(comment => {
+      if (comment._id === commentId) {
+        return {
+          ...comment,
+          content,
+          isEdited: true,
+          updatedAt: new Date()
+        };
+      }
+      
+      // Check in replies if exists
+      if (comment.replies) {
+        return {
+          ...comment,
+          replies: comment.replies.map((reply: any) => {
+            if (reply._id === commentId) {
+              return {
+                ...reply,
+                content,
+                isEdited: true,
+                updatedAt: new Date()
+              };
+            }
+            return reply;
+          })
+        };
+      }
+      
+      return comment;
+    });
+    
+    setComments(updatedComments);
+    return Promise.resolve();
+  };
+  
+  const handleDeleteComment = async (commentId: string) => {
+    // First check if it's a top-level comment
+    const isTopLevel = comments.some(comment => comment._id === commentId);
+    
+    if (isTopLevel) {
+      setComments(comments.filter(comment => comment._id !== commentId));
+    } else {
+      // It's a reply
+      const updatedComments = comments.map(comment => {
+        if (comment.replies) {
+          return {
+            ...comment,
+            replies: comment.replies.filter((reply: any) => reply._id !== commentId)
+          };
+        }
+        return comment;
+      });
+      
+      setComments(updatedComments);
+    }
+    
+    return Promise.resolve();
+  };
+  
+  const handleLikeComment = async (commentId: string, isLiked: boolean) => {
+    const updatedComments = comments.map(comment => {
+      if (comment._id === commentId) {
+        return {
+          ...comment,
+          likes: isLiked ? comment.likes - 1 : comment.likes + 1,
+          likedByCurrentUser: !isLiked
+        };
+      }
+      
+      // Check in replies if exists
+      if (comment.replies) {
+        return {
+          ...comment,
+          replies: comment.replies.map((reply: any) => {
+            if (reply._id === commentId) {
+              return {
+                ...reply,
+                likes: isLiked ? reply.likes - 1 : reply.likes + 1,
+                likedByCurrentUser: !isLiked
+              };
+            }
+            return reply;
+          })
+        };
+      }
+      
+      return comment;
+    });
+    
+    setComments(updatedComments);
+    return Promise.resolve();
+  };
   
   return (
     <MainLayout>
@@ -268,9 +452,14 @@ const DevProfile = () => {
                       <Users size={16} />
                       <span>Follow</span>
                     </Button>
-                    <Button size="sm" variant="outline" className="gap-1 border-gray-200 text-gray-700 hover:bg-gray-100">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="gap-1 border-gray-200 text-gray-700 hover:bg-gray-100"
+                      onClick={() => setCommentDialog(true)}
+                    >
                       <MessageSquare size={16} />
-                      <span>Message</span>
+                      <span>Comment</span>
                     </Button>
                   </div>
                 </div>
@@ -531,6 +720,25 @@ const DevProfile = () => {
           </div>
         </div>
       </div>
+
+      {/* Comments Dialog */}
+      <Dialog open={commentDialog} onOpenChange={setCommentDialog}>
+        <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Comments on {DEV_PROFILE.name}'s Profile</DialogTitle>
+          </DialogHeader>
+          
+          <CommentSection
+            entityId={DEV_PROFILE.id}
+            entityType="project" 
+            comments={comments}
+            onAddComment={handleAddComment}
+            onEditComment={handleEditComment}
+            onDeleteComment={handleDeleteComment}
+            onLikeComment={handleLikeComment}
+          />
+        </DialogContent>
+      </Dialog>
     </MainLayout>
   );
 };
