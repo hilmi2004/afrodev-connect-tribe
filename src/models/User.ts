@@ -1,5 +1,5 @@
 
-import mongoose, { Model, Document } from 'mongoose';
+import mongoose, { Model, Document, Schema } from 'mongoose';
 
 export interface IUser {
   _id?: string;
@@ -47,12 +47,56 @@ export interface IUser {
   }[];
 }
 
+// Create a schema for User
+const UserSchema = new Schema<IUser>({
+  fullName: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  country: { type: String, required: true },
+  yearsOfExperience: { type: Number, required: true },
+  profileImage: { type: String },
+  techStack: [{ type: String }],
+  expertiseLevel: { type: String, required: true },
+  bio: { type: String },
+  github: { type: String },
+  linkedin: { type: String },
+  website: { type: String },
+  twitter: { type: String },
+  profession: { type: String, required: true },
+  interests: [{ type: String }],
+  roles: [{ type: String }],
+  collaborationPreferences: {
+    preferredTeamSize: { type: String },
+    communicationStyle: [{ type: String }],
+    availability: { type: String },
+    learningStyle: { type: String },
+    workStyle: [{ type: String }]
+  },
+  experiences: [{
+    title: { type: String, required: true },
+    company: { type: String, required: true },
+    location: { type: String },
+    current: { type: Boolean, default: false },
+    startDate: { type: Date, required: true },
+    endDate: { type: Date },
+    description: { type: String }
+  }],
+  education: [{
+    institution: { type: String, required: true },
+    degree: { type: String, required: true },
+    field: { type: String, required: true },
+    startDate: { type: Date, required: true },
+    endDate: { type: Date },
+    description: { type: String }
+  }]
+}, { timestamps: true });
+
 // This type is for the model with static methods
 interface IUserModel extends Model<IUser & Document> {
   // Add any static methods here if needed
 }
 
-// Create your User model and cast it to your interface
-const UserModel = mongoose.model<IUser & Document, IUserModel>('User');
+// Create the User model and cast it to the interface
+const UserModel = mongoose.model<IUser & Document, IUserModel>('User', UserSchema);
 
 export { UserModel };
