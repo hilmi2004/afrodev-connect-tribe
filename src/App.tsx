@@ -27,6 +27,8 @@ import CareerAdvice from "@/pages/CareerAdvice";
 import TribeDetail from "@/pages/TribeDetail";
 import ProfileView from "@/pages/ProfileView";
 import ProfileEdit from "@/pages/ProfileEdit";
+import ProjectDetailPage from "@/pages/ProjectDetailPage";
+import ArticleDetailPage from "@/pages/ArticleDetailPage";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +45,7 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/projects" element={<Projects />} />
+                <Route path="/projects/:id" element={<ProjectDetailPage />} />
                 <Route path="/tribes" element={<Tribes />} />
                 <Route path="/tribes/:id" element={<TribeDetail />} />
                 <Route path="/discover" element={<Discover />} />
@@ -50,6 +53,8 @@ const App = () => {
                 <Route path="/roadmap" element={<Roadmap />} />
                 <Route path="/roadmap/:id" element={<Roadmap />} />
                 <Route path="/technews" element={<TechNews />} />
+                <Route path="/articles/:id" element={<ArticleDetailPage />} />
+                <Route path="/articles/:id/:slug" element={<ArticleDetailPage />} />
                 <Route path="/hackathon" element={<Hackathon />} />
                 <Route path="/webinar" element={<Webinar />} />
                 <Route path="/projectspot" element={<ProjectSpotlight />} />
@@ -60,6 +65,7 @@ const App = () => {
                 <Route path="/meetups" element={<Meetups />} />
                 <Route path="/dev-tools" element={<DevTools />} />
                 <Route path="/profile" element={<ProfileView />} />
+                <Route path="/profile/:id" element={<ProfileView />} />
                 <Route path="/profile/edit" element={<ProfileEdit />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

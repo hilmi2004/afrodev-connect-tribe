@@ -91,12 +91,5 @@ const UserSchema = new Schema<IUser>({
   }]
 }, { timestamps: true });
 
-// This type is for the model with static methods
-interface IUserModel extends Model<IUser & Document> {
-  // Add any static methods here if needed
-}
-
-// Create the User model and cast it to the interface
-const UserModel = mongoose.model<IUser & Document, IUserModel>('User', UserSchema);
-
-export { UserModel };
+// Create the User model
+export const UserModel = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
