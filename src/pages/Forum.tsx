@@ -1,8 +1,10 @@
+
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Search,
   MessagesSquare,
@@ -165,7 +167,10 @@ const discussionSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters").max(100, "Title must be less than 100 characters"),
   content: z.string().min(20, "Content must be at least 20 characters"),
   category: z.string().min(1, "Please select a category"),
-  tags: z.string().optional()
+  tags: z.string().optional(),
+  type: z.enum(["discussion", "question"], {
+    required_error: "Please select a post type",
+  }),
 });
 
 const Forum = () => {
@@ -182,7 +187,8 @@ const Forum = () => {
       title: "",
       content: "",
       category: "",
-      tags: ""
+      tags: "",
+      type: "discussion",
     }
   });
 
@@ -382,6 +388,36 @@ const Forum = () => {
                                   />
                                 </FormControl>
                                 <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={discussionForm.control}
+                            name="type"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Post Type</FormLabel>
+                                <Select 
+                                  onValueChange={field.onChange} 
+                                  defaultValue={field.value}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger className="border-afro-purple/20 focus-visible:ring-afro-purple">
+                                      <SelectValue placeholder="Select post type" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectItem value="discussion">Discussion</SelectItem>
+                                    <SelectItem value="question">Question</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                                <p className="text-xs text-gray-500 mt-1">
+                                  {field.value === "question" 
+                                    ? "Questions can be marked as solved when you get a satisfactory answer" 
+                                    : "Discussions are open-ended conversations without a specific answer"}
+                                </p>
                               </FormItem>
                             )}
                           />
