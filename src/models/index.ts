@@ -7,7 +7,6 @@ import Event from './Event';
 import Channel from './Channel';
 import Project from './Project';
 import Comment from './Comment';
-import Article from './Article';
 
 export {
   UserModel,
@@ -17,6 +16,5 @@ export {
   Event,
   Channel,
   Project,
-  Comment,
-  Article
+  Comment
 };
