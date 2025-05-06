@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Search,
   MessagesSquare,
@@ -30,12 +29,6 @@ import {
   pulseAnimation
 } from "@/components/ui/motion";
 import { motion } from "framer-motion";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 // Mock discussion data
 const FORUM_DISCUSSIONS = [
@@ -162,45 +155,11 @@ const FORUM_CATEGORIES = [
   { id: "security", name: "Security", count: 167 }
 ];
 
-// Discussion form schema
-const discussionSchema = z.object({
-  title: z.string().min(5, "Title must be at least 5 characters").max(100, "Title must be less than 100 characters"),
-  content: z.string().min(20, "Content must be at least 20 characters"),
-  category: z.string().min(1, "Please select a category"),
-  tags: z.string().optional(),
-  type: z.enum(["discussion", "question"], {
-    required_error: "Please select a post type",
-  }),
-});
-
 const Forum = () => {
   const [activeTab, setActiveTab] = useState("discussions");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [solved, setSolved] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  
-  // Form for creating new discussion
-  const discussionForm = useForm<z.infer<typeof discussionSchema>>({
-    resolver: zodResolver(discussionSchema),
-    defaultValues: {
-      title: "",
-      content: "",
-      category: "",
-      tags: "",
-      type: "discussion",
-    }
-  });
-
-  const handleCreateDiscussion = (values: z.infer<typeof discussionSchema>) => {
-    // In a real app, this would send data to the backend
-    console.log("New discussion:", values);
-    
-    // You could add the new discussion to the list here
-    // For now we'll just close the dialog
-    setDialogOpen(false);
-    discussionForm.reset();
-  };
   
   const filterDiscussions = () => {
     let filtered = [...FORUM_DISCUSSIONS];
@@ -360,144 +319,10 @@ const Forum = () => {
                     />
                   </div>
                   
-                  <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button className="whitespace-nowrap w-full sm:w-auto bg-afro-purple hover:bg-afro-purple/90">
-                        <MessageCircle className="mr-2 h-4 w-4" />
-                        Start Discussion
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[600px]">
-                      <DialogHeader>
-                        <DialogTitle className="text-2xl font-bold text-afro-purple">Start a New Discussion</DialogTitle>
-                      </DialogHeader>
-                      
-                      <Form {...discussionForm}>
-                        <form onSubmit={discussionForm.handleSubmit(handleCreateDiscussion)} className="space-y-6 pt-4">
-                          <FormField
-                            control={discussionForm.control}
-                            name="title"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Discussion Title</FormLabel>
-                                <FormControl>
-                                  <Input 
-                                    placeholder="What's your discussion about?" 
-                                    {...field} 
-                                    className="border-afro-purple/20 focus-visible:ring-afro-purple"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
-                          <FormField
-                            control={discussionForm.control}
-                            name="type"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Post Type</FormLabel>
-                                <Select 
-                                  onValueChange={field.onChange} 
-                                  defaultValue={field.value}
-                                >
-                                  <FormControl>
-                                    <SelectTrigger className="border-afro-purple/20 focus-visible:ring-afro-purple">
-                                      <SelectValue placeholder="Select post type" />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    <SelectItem value="discussion">Discussion</SelectItem>
-                                    <SelectItem value="question">Question</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                                <FormMessage />
-                                <p className="text-xs text-gray-500 mt-1">
-                                  {field.value === "question" 
-                                    ? "Questions can be marked as solved when you get a satisfactory answer" 
-                                    : "Discussions are open-ended conversations without a specific answer"}
-                                </p>
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={discussionForm.control}
-                            name="category"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Category</FormLabel>
-                                <FormControl>
-                                  <select
-                                    {...field}
-                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 border-afro-purple/20 focus-visible:ring-afro-purple"
-                                  >
-                                    <option value="">Select a category</option>
-                                    {FORUM_CATEGORIES.filter(cat => cat.id !== 'all').map(category => (
-                                      <option key={category.id} value={category.id}>
-                                        {category.name}
-                                      </option>
-                                    ))}
-                                  </select>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={discussionForm.control}
-                            name="content"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Discussion Content</FormLabel>
-                                <FormControl>
-                                  <Textarea 
-                                    placeholder="Describe your discussion or question in detail..." 
-                                    className="min-h-[160px] resize-y border-afro-purple/20 focus-visible:ring-afro-purple" 
-                                    {...field} 
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={discussionForm.control}
-                            name="tags"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Tags (comma separated)</FormLabel>
-                                <FormControl>
-                                  <Input 
-                                    placeholder="e.g. React, TypeScript, API" 
-                                    {...field} 
-                                    className="border-afro-purple/20 focus-visible:ring-afro-purple"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <div className="flex justify-end gap-3">
-                            <DialogClose asChild>
-                              <Button type="button" variant="outline">Cancel</Button>
-                            </DialogClose>
-                            <Button 
-                              type="submit" 
-                              className="bg-afro-purple hover:bg-afro-purple/90"
-                            >
-                              <MessageCircle className="mr-2 h-4 w-4" />
-                              Post Discussion
-                            </Button>
-                          </div>
-                        </form>
-                      </Form>
-                    </DialogContent>
-                  </Dialog>
+                  <Button className="whitespace-nowrap w-full sm:w-auto bg-afro-purple hover:bg-afro-purple/90">
+                    <MessageCircle className="mr-2 h-4 w-4" />
+                    Start Discussion
+                  </Button>
                 </div>
                 
                 <TabsContent value="discussions" className="mt-0 animate-in fade-in-50">

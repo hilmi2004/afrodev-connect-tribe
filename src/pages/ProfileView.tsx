@@ -1,3 +1,4 @@
+
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -19,8 +20,7 @@ import {
   Award,
   Heart,
   Clock,
-  UserRound,
-  Bookmark
+  UserRound
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -35,7 +35,6 @@ import {
 } from "@/components/ui/motion";
 import { useAuth } from "@/hooks/useAuth";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { UserBookmarks } from "@/components/profile/UserBookmarks";
 
 // Mock user data - in production this would come from the API
 const USER_PROFILE = {
@@ -348,7 +347,7 @@ export default function ProfileView() {
               className="w-full lg:w-2/3"
             >
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="w-full bg-white/70 backdrop-blur-sm border border-purple-600/20 rounded-lg overflow-hidden grid grid-cols-4 mb-6">
+                <TabsList className="w-full bg-white/70 backdrop-blur-sm border border-purple-600/20 rounded-lg overflow-hidden grid grid-cols-3 mb-6">
                   <TabsTrigger value="projects" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white">
                     Projects
                   </TabsTrigger>
@@ -357,9 +356,6 @@ export default function ProfileView() {
                   </TabsTrigger>
                   <TabsTrigger value="timeline" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white">
                     Timeline
-                  </TabsTrigger>
-                  <TabsTrigger value="bookmarks" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white">
-                    Bookmarks
                   </TabsTrigger>
                 </TabsList>
                 
@@ -502,10 +498,6 @@ export default function ProfileView() {
                       ))}
                     </MotionDiv>
                   </div>
-                </TabsContent>
-                
-                <TabsContent value="bookmarks" className="mt-0">
-                  <UserBookmarks userId={user?._id || "1"} />
                 </TabsContent>
               </Tabs>
             </MotionDiv>
