@@ -4,9 +4,10 @@ import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
 
 // Generate JWT Token
+// Generate JWT Token (simplified)
 const generateToken = (userId) => {
     return jwt.sign(
-        { userId },
+        { userId }, // No fingerprint in payload
         process.env.JWT_SECRET || 'fallbacksecretfordevonly',
         { expiresIn: process.env.JWT_EXPIRE || '30d' }
     );

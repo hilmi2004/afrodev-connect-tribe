@@ -3,18 +3,31 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const CommentSchema = new Schema({
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    content: { type: String, required: true },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+    content: {
+        type: String,
+        required: true
+    },
     targetType: {
         type: String,
-        enum: ["project", "tribe", "timeline"],
+        enum: ["project", "article"],
         required: true
     },
     targetId: {
         type: Schema.Types.ObjectId,
         required: true,
-        refPath: "targetType" // Dynamic reference based on targetType
+        refPath: "targetType"
     },
+    replies: [{
+        user: { type: Schema.Types.ObjectId, ref: "User" },
+        content: String,
+        isCreator: Boolean,
+        createdAt: { type: Date, default: Date.now }
+    }],
     createdAt: { type: Date, default: Date.now }
 });
 

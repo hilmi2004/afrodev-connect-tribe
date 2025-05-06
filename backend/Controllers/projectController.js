@@ -1,7 +1,7 @@
 
 import Project from '../Models/Project.js';
 import User from '../Models/User.js';
-
+import mongoose from 'mongoose';
 // Create a new project
 export async function createProject(req, res) {
   try {
@@ -92,6 +92,54 @@ export async function getProject(req, res) {
   }
 }
 
+// Get all projects (with optional pagination)
+// Get all projects (with optional pagination)
+// Update the getProjects function to remove the transformation
+export async function getProjects(req, res) {
+  try {
+    const { creator } = req.query;
+
+    // Validate creator ID if provided
+    if (creator) {
+      if (!mongoose.isValidObjectId(creator)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid creator ID format'
+        });
+      }
+    }
+
+    // Build query safely
+    const query = creator ? { creator: new mongoose.Types.ObjectId(creator) } : {};
+
+    // Execute query with error handling
+    const projects = await Project.find(query)
+        .populate('creator', 'fullName profileImage country')
+        .populate('contributors', 'fullName profileImage')
+        .populate('tribeId', 'name description country')
+        .sort({ createdAt: -1 })
+        .lean(); // Use lean() for better performance
+
+    return res.status(200).json({
+      success: true,
+      count: projects.length,
+      projects
+    });
+
+  } catch (error) {
+    console.error('Detailed projects fetch error:', {
+      message: error.message,
+      stack: error.stack,
+      query: req.query
+    });
+
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch projects',
+      systemError: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+}
 // Update a project
 export async function updateProject(req, res) {
   try {
@@ -235,20 +283,108 @@ export async function getProjectContributors(req, res) {
 }
 
 // Like a project
+// export async function likeProject(req, res) {
+//   try {
+//     const projectId = req.params.id;
+//     const userId = req.user.id;
+//
+//     const project = await Project.findById(projectId);
+//
+//     if (!project) {
+//       return res.status(404).json({
+//         success: false,
+//         message: 'Project not found'
+//       });
+//     }
+//
+//     // Check if user already liked the project
+//     if (project.likedByUsers.includes(userId)) {
+//       return res.status(400).json({
+//         success: false,
+//         message: 'You already liked this project'
+//       });
+//     }
+//
+//     // Add user to likedByUsers and increment like count
+//     project.likedByUsers.push(userId);
+//     project.likes += 1;
+//
+//     await project.save();
+//
+//     res.json({
+//       success: true,
+//       message: 'Project liked successfully',
+//       likes: project.likes
+//     });
+//
+//   } catch (error) {
+//     console.error('Error liking project:', error);
+//     res.status(500).json({
+//       success: false,
+//       message: 'Server error when liking project'
+//     });
+//   }
+// }
+
+// Unlike a project
+// export async function unlikeProject(req, res) {
+//   try {
+//     const projectId = req.params.id;
+//     const userId = req.user.id;
+//
+//     const project = await Project.findById(projectId);
+//
+//     if (!project) {
+//       return res.status(404).json({
+//         success: false,
+//         message: 'Project not found'
+//       });
+//     }
+//
+//     // Check if user has liked the project
+//     if (!project.likedByUsers.includes(userId)) {
+//       return res.status(400).json({
+//         success: false,
+//         message: 'You have not liked this project'
+//       });
+//     }
+//
+//     // Remove user from likedByUsers and decrement like count
+//     project.likedByUsers = project.likedByUsers.filter(
+//       id => id.toString() !== userId
+//     );
+//     project.likes = Math.max(0, project.likes - 1);
+//
+//     await project.save();
+//
+//     res.json({
+//       success: true,
+//       message: 'Project unliked successfully',
+//       likes: project.likes
+//     });
+//
+//   } catch (error) {
+//     console.error('Error unliking project:', error);
+//     res.status(500).json({
+//       success: false,
+//       message: 'Server error when unliking project'
+//     });
+//   }
+// }
+// In likeProject controller:
 export async function likeProject(req, res) {
   try {
     const projectId = req.params.id;
     const userId = req.user.id;
-    
+
     const project = await Project.findById(projectId);
-    
     if (!project) {
       return res.status(404).json({
         success: false,
         message: 'Project not found'
       });
     }
-    
+
     // Check if user already liked the project
     if (project.likedByUsers.includes(userId)) {
       return res.status(400).json({
@@ -256,19 +392,20 @@ export async function likeProject(req, res) {
         message: 'You already liked this project'
       });
     }
-    
-    // Add user to likedByUsers and increment like count
+
+    // Add like
     project.likedByUsers.push(userId);
     project.likes += 1;
-    
+
     await project.save();
-    
+
     res.json({
       success: true,
       message: 'Project liked successfully',
-      likes: project.likes
+      likes: project.likes,
+      liked: true
     });
-    
+
   } catch (error) {
     console.error('Error liking project:', error);
     res.status(500).json({
@@ -278,43 +415,42 @@ export async function likeProject(req, res) {
   }
 }
 
-// Unlike a project
+// In unlikeProject controller:
 export async function unlikeProject(req, res) {
   try {
     const projectId = req.params.id;
     const userId = req.user.id;
-    
+
     const project = await Project.findById(projectId);
-    
     if (!project) {
       return res.status(404).json({
         success: false,
         message: 'Project not found'
       });
     }
-    
+
     // Check if user has liked the project
-    if (!project.likedByUsers.includes(userId)) {
+    const userIndex = project.likedByUsers.indexOf(userId);
+    if (userIndex === -1) {
       return res.status(400).json({
         success: false,
         message: 'You have not liked this project'
       });
     }
-    
-    // Remove user from likedByUsers and decrement like count
-    project.likedByUsers = project.likedByUsers.filter(
-      id => id.toString() !== userId
-    );
+
+    // Remove like
+    project.likedByUsers.splice(userIndex, 1);
     project.likes = Math.max(0, project.likes - 1);
-    
+
     await project.save();
-    
+
     res.json({
       success: true,
       message: 'Project unliked successfully',
-      likes: project.likes
+      likes: project.likes,
+      liked: false
     });
-    
+
   } catch (error) {
     console.error('Error unliking project:', error);
     res.status(500).json({

@@ -21,8 +21,24 @@ const ProjectSchema = new Schema({
     lookingForContributors: { type: Boolean, default: false },
     likes: { type: Number, default: 0 },
     tags: [{ type: String }],
-    tribeId: { type: Schema.Types.ObjectId, ref: 'Tribe' },
-    likedByUsers: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+    tribeId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Tribe',
+        validate: {
+            validator: async function(v) {
+                if (!v) return true;
+                const tribe = await mongoose.model('Tribe').findById(v).lean();
+                return !!tribe;
+            },
+            message: 'Tribe does not exist'
+        }
+    },
+    likedByUsers: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        default: []
+    }],
+    comments: { type: Number, default: 0 }
 }, { timestamps: true });
 
 const Project = mongoose.model('Project', ProjectSchema);

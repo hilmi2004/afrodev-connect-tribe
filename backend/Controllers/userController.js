@@ -4,100 +4,90 @@ import Project from '../Models/Project.js';
 import TimelineEvent from '../Models/TimelineEvent.js';
 
 // Get user profile
+// Update getUserProfile to handle missing ID and wrong parameter name
 export async function getUserProfile(req, res) {
   try {
-    const userId = req.params.id;
-    
-    // Check if requested user is the same as authenticated user or if authenticated user is admin
-    const isOwnProfile = userId === req.user.id || req.user.role === 'admin';
-    
-    const user = await User.findById(userId)
-      .select(isOwnProfile ? '-password' : 'fullName email bio profileImage socialLinks country experience programmingLanguages');
-    
-    if (!user) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'User not found' 
-      });
+    const userId = req.params.id || req.params.userId;
+
+    if (!userId) {
+      return res.status(400).json({ success: false, message: "User ID is required" });
     }
-    
-    res.json({
-      success: true,
-      user
-    });
+
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // ✅ Explicitly send response
+    res.status(200).json({ success: true, user });
   } catch (error) {
-    console.error('Error fetching user profile:', error);
-    res.status(500).json({ 
-      success: false, 
-      message: 'Server error when fetching user profile' 
-    });
+    console.error("Error in getUserProfile:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 }
 
 // Update user profile
+// Update user profile
+
+// userController.js (updateUserProfile function)
 export async function updateUserProfile(req, res) {
   try {
     const userId = req.params.id;
-    
-    // Only allow users to update their own profile (or admins)
+
     if (userId !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
         message: 'You are not authorized to update this profile'
       });
     }
-    
-    // Fields that can be updated
-    const {
-      fullName,
-      country,
-      bio,
-      profileImage,
-      socialLinks,
-      experience,
-      programmingLanguages,
-      interests,
-      timeZone,
-      githubUsername
-    } = req.body;
-    
-    // Build update object with only provided fields
-    const updateData = {};
-    if (fullName) updateData.fullName = fullName;
-    if (country) updateData.country = country;
-    if (bio) updateData.bio = bio;
-    if (profileImage) updateData.profileImage = profileImage;
-    if (socialLinks) updateData.socialLinks = socialLinks;
-    if (experience) updateData.experience = experience;
-    if (programmingLanguages) updateData.programmingLanguages = programmingLanguages;
-    if (interests) updateData.interests = interests;
-    if (timeZone) updateData.timeZone = timeZone;
-    if (githubUsername) updateData.githubUsername = githubUsername;
-    
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { $set: updateData },
-      { new: true, runValidators: true }
+
+    // Clean and validate languages array
+    let languages = [];
+    if (Array.isArray(req.body.languages)) {
+      languages = [...new Set(
+          req.body.languages
+              .map(l => typeof l === 'string' ? l.trim() : String(l).trim())
+              .filter(l => l)
+      )];
+    }
+
+    // Create update object
+    const update = {
+      ...req.body,
+      languages // Use cleaned array
+    };
+
+    const updatedUser = await User.findOneAndUpdate(
+        { _id: userId },
+        update,
+        {
+          new: true,
+          runValidators: true,
+          lean: true
+        }
     ).select('-password');
-    
+
     if (!updatedUser) {
       return res.status(404).json({
         success: false,
         message: 'User not found'
       });
     }
-    
-    res.json({
+
+    return res.json({
       success: true,
-      message: 'Profile updated successfully',
       user: updatedUser
     });
-    
+
   } catch (error) {
-    console.error('Error updating user profile:', error);
-    res.status(500).json({
+    console.error('Update error:', error);
+    return res.status(500).json({
       success: false,
-      message: 'Server error when updating profile'
+      message: process.env.NODE_ENV === 'development'
+          ? error.message
+          : 'Server error',
+      ...(process.env.NODE_ENV === 'development' && { stack: error.stack })
     });
   }
 }

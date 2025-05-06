@@ -24,7 +24,12 @@ const About = () => {
       name: "Grace Muthoni",
       role: "UX Designer",
       image: "https://randomuser.me/api/portraits/women/68.jpg"
-    }
+    },
+    {
+      name: "Desire Ezire",
+      role: "Creative Director",
+      image: "public/DesireCD.jpeg"
+    },
   ];
 
   return (
@@ -35,7 +40,10 @@ const About = () => {
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">Our Mission</h1>
             <p className="text-xl mb-8 text-white/90">
-              To build a vibrant, connected community of African tech creators that showcases talent, fosters collaboration, and celebrates our cultural diversity.
+              To empower African tech talent by providing a platform that celebrates, connects, and supports developers,
+              designers, and innovators—regardless of their background or access to resources. We aim to bridge the digital
+              divide by making tech education, tools, and visibility accessible to every young African passionate about
+              building the future.
             </p>
             <Button className="bg-white text-afro-purple hover:bg-white/90">
               Join Our Community

@@ -7,6 +7,7 @@ export interface RegistrationData {
   country: string;
   experience: string;
   programmingLanguages: string[];
+  languages: string[];
   startYear: string;
   learningStyle: string;
   interests: string[];
@@ -46,6 +47,10 @@ export const interests = [
   "Web Development", "Mobile Development", "DevOps", "Data Science", 
   "Machine Learning", "UI/UX Design", "Game Development", "Blockchain"
 ];
+
+// export const languages = [
+//     "English", "Swahili","Hausa","Igbo","Yoruba","Ebira","French"
+// ];
 
 export const careerGoals = [
   "Start a tech company", 

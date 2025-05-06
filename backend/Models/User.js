@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
@@ -7,8 +6,30 @@ const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     country: { type: String, required: true },
-    experience: { type: String, required: true },
+    experience: [{
+        title: String,
+        company: String,
+        period: String,
+        description: String
+    }],
+    education: [{
+        degree: { type: String },
+        institution: { type: String },
+        year: { type: String }
+    }],
     programmingLanguages: [{ type: String }],
+    languages: {
+        type: [String],
+        default: [],
+        set: function(langs) {
+            // Convert to array and remove duplicates
+            return [...new Set(
+                Array.isArray(langs)
+                    ? langs.map(String).filter(l => l.trim())
+                    : []
+            )];
+        }
+    },
     startYear: { type: String },
     learningStyle: { type: String },
     interests: [{ type: String }],
@@ -35,6 +56,8 @@ const UserSchema = new mongoose.Schema({
     joinedTribes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tribe' }],
     createdRoadmaps: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Roadmap' }],
     savedRoadmaps: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Roadmap' }],
+    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     role: { type: String, enum: ['user', 'moderator', 'admin'], default: 'user' }
 }, {
     timestamps: true,
@@ -64,5 +87,12 @@ UserSchema.methods.comparePassword = async function(candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
 };
 
-const User = mongoose.model('User', UserSchema);
+UserSchema.path('languages').validate(function(value) {
+    console.log('Validating languages:', value);
+    return true; // Temporarily bypass validation
+});
+
+// Prevent model overwrite in case of hot-reloading
+const User = mongoose.models.User || mongoose.model('User', UserSchema);
+
 export default User;

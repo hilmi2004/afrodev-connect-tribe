@@ -27,6 +27,10 @@ import CareerAdvice from "@/pages/CareerAdvice";
 import TribeDetail from "@/pages/TribeDetail";
 import ProfileView from "@/pages/ProfileView";
 import ProfileEdit from "@/pages/ProfileEdit";
+import DevJourney from "@/pages/DevJourney.tsx";
+import ArticlePage from "@/pages/ArticlePage.tsx";
+import FollowersPage from "./pages/FollowersPage";
+import FollowingPage from "@/pages/FollowingPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -54,13 +58,20 @@ const App = () => {
                 <Route path="/webinar" element={<Webinar />} />
                 <Route path="/projectspot" element={<ProjectSpotlight />} />
                 <Route path="/forum" element={<Forum />} />
-                <Route path="/devprof" element={<DevProfile />} />
                 <Route path="/localconnect" element={<LocalConnect />} />
                 <Route path="/careeradvice" element={<CareerAdvice />} />
                 <Route path="/meetups" element={<Meetups />} />
                 <Route path="/dev-tools" element={<DevTools />} />
-                <Route path="/profile" element={<ProfileView />} />
-                <Route path="/profile/edit" element={<ProfileEdit />} />
+                <Route path="/users/:userId" element={<ProfileView />} />
+                <Route path="/profileedit" element={<ProfileEdit />} />
+                <Route path="/devjourney" element={<DevJourney/>} />
+                <Route path="/articleview/:slug" element={<ArticlePage/>} />
+                <Route path="/users/:userId/followers" element={<FollowersPage />} />
+                <Route path="/users/:userId/following" element={<FollowingPage />} />
+                <Route path="/profileview" element={<ProfileView />} />
+
+
+
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

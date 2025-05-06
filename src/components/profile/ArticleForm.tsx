@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
+import api from "@/lib/api.ts";
 
 const articleFormSchema = z.object({
   title: z.string().min(5, {
@@ -80,30 +81,41 @@ export function ArticleForm() {
     );
   }
 
-  async function onSubmit(data: ArticleFormValues) {
-    setIsSubmitting(true);
-    
-    try {
-      // This is where we would make an API call to create the article
-      console.log("Article data to submit:", data);
-      
-      toast({
-        title: "Article added successfully!",
-        description: "Your article has been added to your profile.",
-      });
-      
-      form.reset();
-    } catch (error) {
-      console.error("Error adding article:", error);
-      toast({
-        title: "Error adding article",
-        description: "There was a problem adding your article. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
+    // Update the onSubmit function in ArticleForm.tsx
+    async function onSubmit(data: ArticleFormValues) {
+        setIsSubmitting(true);
+
+        try {
+            const response = await api.post('/articles', {
+                title: data.title,
+                excerpt: data.excerpt,
+                content: data.content,
+                tags: data.tags,
+                readTime: data.readTime,
+                category: 'technology' // or get this from a select input
+            });
+
+            if (response.data.success) {
+                toast({
+                    title: "Article published successfully!",
+                    description: "Your article is now live.",
+                });
+
+                form.reset();
+            } else {
+                throw new Error(response.data.message || 'Failed to publish article');
+            }
+        } catch (error) {
+            console.error("Error adding article:", error);
+            toast({
+                title: "Error publishing article",
+                description: error.response?.data?.message || "There was a problem publishing your article. Please try again.",
+                variant: "destructive",
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     }
-  }
 
   return (
     <Card className="w-full">

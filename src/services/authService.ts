@@ -1,159 +1,97 @@
-const API_URL = 'http://localhost:5000/api';
+
+import { User } from "@/types/tribe";
+import api from "@/lib/api.ts";
+
+
+const API_URL= 'http://localhost:5000/api';
+interface AuthResponse {
+  success: boolean;
+  user?: User;
+  token?: string;
+  message?: string;
+  error?: string;
+  errors?: string[];
+}
+
+interface RegisterData {
+  email: string;
+  password: string;
+  fullName: string;
+  agreedToTerms: boolean;
+  [key: string]: any;
+}
 
 export const authService = {
-  /**
-   * Register a new user
-   * @param {object} userData - User registration data
-   * @returns {Promise<{success: boolean, user?: object, token?: string, message?: string, errors?: array}>}
-   */
-  async register(userData) {
+  async register(userData: RegisterData): Promise<AuthResponse> {
     try {
-      // Ensure required fields are present
-      const payload = {
+      const response = await api.post('/auth/register', {
         fullName: userData.fullName,
         email: userData.email,
         password: userData.password,
-        country: userData.country,
-        experience: userData.experience,
-        agreedToTerms: true, // Must be true
-        ...userData // Include any additional fields
-      };
-
-      const response = await fetch(`${API_URL}/auth/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(payload),
+        agreedToTerms: true,
+        ...userData
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        return {
-          success: false,
-          message: data.message || 'Registration failed',
-          errors: data.errors || []
-        };
-      }
-
-      // Save user data and token if registration successful
-      if (data.token) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
       }
 
       return {
         success: true,
-        user: data.user,
-        token: data.token
+        user: response.data.user,
+        token: response.data.token
       };
-    } catch (error) {
-      console.error('Registration error:', error);
+    } catch (error: any) {
       return {
         success: false,
-        message: error.message || 'Network error during registration'
+        message: error.response?.data?.message || 'Registration failed',
+        errors: error.response?.data?.errors || []
       };
     }
   },
 
-  /**
-   * Login user
-   * @param {string} email
-   * @param {string} password
-   * @returns {Promise<{success: boolean, user?: object, token?: string, message?: string}>}
-   */
-  async login(email, password) {
+  async login(email: string, password: string): Promise<AuthResponse> {
     try {
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await api.post('/auth/login', { email, password });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        return {
-          success: false,
-          message: data.message || 'Login failed'
-        };
-      }
-
-      // Save user data and token
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
 
       return {
         success: true,
-        user: data.user,
-        token: data.token
+        user: response.data.user,
+        token: response.data.token
       };
-    } catch (error) {
-      console.error('Login error:', error);
+    } catch (error: any) {
       return {
         success: false,
-        message: 'Network error during login'
+        message: error.response?.data?.message || 'Login failed'
       };
     }
   },
 
-  /**
-   * Get current authenticated user
-   * @returns {Promise<{success: boolean, user?: object, message?: string}>}
-   */
-  async getCurrentUser() {
+  async getCurrentUser(): Promise<AuthResponse> {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        return { success: false, message: 'No authentication token' };
+        return { success: false, message: 'No token available' };
       }
 
-      const response = await fetch(`${API_URL}/auth/me`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        this.logout();
-        return {
-          success: false,
-          message: data.message || 'Session expired'
-        };
-      }
-
-      // Update stored user data
-      localStorage.setItem('user', JSON.stringify(data.user));
-
+      const response = await api.get('/users/me'); // Update this endpoint
       return {
         success: true,
-        user: data.user
+        user: response.data
       };
-    } catch (error) {
-      console.error('Get current user error:', error);
+    } catch (error: any) {
       return {
         success: false,
-        message: 'Network error fetching user data'
+        message: error.response?.data?.message || 'Failed to fetch user'
       };
     }
   },
 
-  /**
-   * Update user profile
-   * @param {object} userData - Updated user data
-   * @returns {Promise<{success: boolean, user?: object, message?: string}>}
-   */
-  async updateProfile(userData) {
+  async updateProfile(userData: Partial<User>): Promise<AuthResponse> {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -179,14 +117,12 @@ export const authService = {
         };
       }
 
-      // Update stored user data
       localStorage.setItem('user', JSON.stringify(data.user));
-
       return {
         success: true,
         user: data.user
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Update profile error:', error);
       return {
         success: false,
@@ -195,27 +131,64 @@ export const authService = {
     }
   },
 
-  /**
-   * Check if user is authenticated
-   * @returns {boolean}
-   */
-  isLoggedIn() {
+  async joinTribe(tribeId: string): Promise<void> {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('No authentication token');
+
+      const response = await fetch(`${API_URL}/tribes/${tribeId}/join`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to join tribe');
+      }
+    } catch (error: any) {
+      console.error('Join tribe error:', error);
+      throw error;
+    }
+  },
+
+  async leaveTribe(tribeId: string): Promise<void> {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('No authentication token');
+
+      const response = await fetch(`${API_URL}/tribes/${tribeId}/leave`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to leave tribe');
+      }
+    } catch (error: any) {
+      console.error('Leave tribe error:', error);
+      throw error;
+    }
+  },
+
+  isLoggedIn(): boolean {
     return !!localStorage.getItem('token');
   },
 
-  /**
-   * Logout user
-   */
-  logout() {
+  logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
   },
 
-  /**
-   * Get authentication token
-   * @returns {string|null}
-   */
-  getToken() {
+  getToken(): string | null {
     return localStorage.getItem('token');
   }
 };

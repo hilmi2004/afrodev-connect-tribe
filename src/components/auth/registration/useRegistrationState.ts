@@ -1,9 +1,11 @@
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { RegistrationData } from "./types";
+import {Schema} from "mongoose";
+// import Date = module
 
 export const useRegistrationState = () => {
   const navigate = useNavigate();
@@ -16,7 +18,7 @@ export const useRegistrationState = () => {
     fullName: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    confirmPassword: "", languages: [],
     country: "",
     experience: "",
     programmingLanguages: [],
