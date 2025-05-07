@@ -28,7 +28,6 @@ export default defineConfig(({ mode }) => ({
     // Remove explicit excludes as they might interfere
   },
   build: {
-    OutDir:'dist',
     commonjsOptions: {
       transformMixedEsModules: true,
     }
